@@ -1,0 +1,14 @@
+{
+    "name": "LibreJargon",
+    "dependencies": {
+        "pdfjs-dist": "2.16.105"
+    },
+    "devDependencies": {
+        "web-ext": "7.3.0",
+        "typescript": "4.8.4"
+    },
+    "scripts": {
+        "web-ext": "web-ext",
+        "tsc": "tsc"
+    }
+}
