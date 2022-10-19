@@ -4,5 +4,15 @@
     "version": "0.0.1",
     "browser_action": {
         "default_popup": "src/Frontend/popup.html"
-    }
+    },
+    "content_scripts": [
+        {
+          "matches": ["file:///*.pdf"],
+          "js": ["src/PDFParse/Parse.js"]
+        },
+        {
+          "matches": ["*://*/*.pdf"],
+          "js": ["src/PDFParse/Parse.js"]
+        }
+      ]
 }
