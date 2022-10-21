@@ -1,0 +1,13 @@
+{
+    "manifest_version": 2,
+    "name": "LibreJargon",
+    "version": "0.0.1",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "permissions": ["*://*/*.pdf"],
+    "browser_action": {},
+    "web_accessible_resources": [
+        "viewer/viewer.html"
+    ]
+}
