@@ -1,1 +1,3 @@
-/src/Firebase/FirebaseSecrets.js
+/node_modules/
+/dist/
+/src/firebase/firebaseSecrets.js
