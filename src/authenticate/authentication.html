@@ -2,16 +2,37 @@
 <html lang="en">
   <head>
     <title>LibreJargon</title>
-    <script type="module" src="authentication.js"></script>
+    <link rel="stylesheet" href="authentication.css">
   </head>
   <body>
-    Welcome to LibreJargon
-    <form onsubmit="signIntoAccount()">
-      <label for="eml"><b>Password</b></label>
+    <h1>Welcome to LibreJargon</h1>
+    <h2>Sign In</h2>
+    <div class="alert" id="signinerror">
+      <span class="closebtn" id="signinclosebtn";">&times;</span>
+      <strong>Error:</strong> Invalid email or password
+    </div>
+    <form>
+      <label for="eml"><b>Email</b></label>
       <input type="email" placeholder="Enter Email" name="eml" id="sieml" required/>
       <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" id="sipsw" required/>
-      <button type="submit">Sign In</button>
+      <input type="password" placeholder="Enter Password" name="psw" id="sipwd" required/>
     </form>
+    <button id="signin-btn">Sign In</button>
+    <h2>Or Sign Up</h2>
+    <div class="alert" id="signuperror">
+      <span class="closebtn" id="signupclosebtn">&times;</span>
+      <strong>Error:</strong> Invalid email or password
+    </div>
+    <form>
+      <label for="regeml"><b>Email</b></label>
+      <input type="email" placeholder="Enter Email" name="regeml" id="sueml" required/>
+      <label for="regpsw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="regpsw" id="signuppwd" required/>
+      <label for="coregpsw"><b>Confirm Password</b></label>
+      <input type="password" placeholder="Re-enter Password" name="coregpsw" id="confirmsignuppwd" required/>
+    </form>
+    <button id="signup-btn">Sign Up</button>
+    <script type="module" src="authentication.js"/>
+
   </body>
 </html>

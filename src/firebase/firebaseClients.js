@@ -1,24 +1,38 @@
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth'
 import { getFirestore, doc, collection, setDoc, updateDoc, getDoc } from 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
+import { firebaseConfig } from './firebaseSecrets'
+
+const FIREBASE_APP = initializeApp(firebaseConfig)
 
 
 export class AuthHandler {
   constructor() {
     this.uid = undefined
     this.userCred = undefined
-    this.appAuth = getAuth(window.FIREBASE_APP)
+    this.appAuth = getAuth(FIREBASE_APP)
   }
 
   async registerUser(email, password) {
-    this.userCred = createUserWithEmailAndPassword(this.appAuth, email, password)
+    try {
+      this.userCred = await createUserWithEmailAndPassword(this.appAuth, email, password)
+    } catch (e) {
+      return "error"
+    }
+
     this.uid = this.userCred.user.uid;
     return this.uid
   }
 
   async signIn(email, password) {
-    this.userCred = await signInWithEmailAndPassword(this.appAuth, email, password)
+    try {
+      this.userCred = await signInWithEmailAndPassword(this.appAuth, email, password)
+    } catch (e) {
+      return "error"
+    }
+
     this.uid = this.userCred.user.uid;
-    return this.uid;
+    return this.uid
   }
 
   getUid() {
@@ -36,7 +50,7 @@ export class AuthHandler {
 
 export class DatabaseHandler {
   constructor() {
-    this.database = getFirestore(window.FIREBASE_APP);
+    this.database = getFirestore(FIREBASE_APP);
   }
 
   async updateSettings(settingsConfig) {
