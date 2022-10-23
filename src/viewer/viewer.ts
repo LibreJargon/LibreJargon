@@ -1,4 +1,4 @@
-import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
+import { PDFDocumentProxy, getDocument, GlobalWorkerOptions } from "pdfjs-dist"
 import { debounce } from "./utils"
 
 GlobalWorkerOptions.workerPort = new Worker(
@@ -6,12 +6,11 @@ GlobalWorkerOptions.workerPort = new Worker(
     {type: "module"}
 )
 
-let pdf = null
-let pages = []
+let pages: HTMLElement[] = []
 let pagesLoaded: Set<number> = new Set()
 
-const pagesContainer = document.getElementById("pages-container")
-async function initPageContainers() {
+const pagesContainer = document.getElementById("pages-container")!
+async function initPageContainers(pdf: PDFDocumentProxy) {
     for (let i = 1; i <= pdf.numPages; ++i) {
         const page = await pdf.getPage(i)
         const viewport = page.getViewport({scale: 1})
@@ -26,7 +25,7 @@ async function initPageContainers() {
     }
 }
 
-async function loadVisiblePages() {
+async function loadVisiblePages(pdf: PDFDocumentProxy) {
     // Binary search for first page to load
     let left = 0
     let right = pages.length - 1
@@ -62,7 +61,7 @@ async function loadVisiblePages() {
             canvas.style.height = div.style.height
 
             page.render({
-                canvasContext: canvas.getContext("2d"),
+                canvasContext: canvas.getContext("2d")!,
                 viewport: viewport
             })
 
@@ -83,14 +82,14 @@ async function loadVisiblePages() {
 async function main() {
     // Get URL
     const url = new URL(document.location.href)
-    const pdfURL = atob(unescape(url.searchParams.get("url")))
+    const pdfURL = atob(unescape(url.searchParams.get("url")!))
     history.replaceState(null, "", url.origin + url.pathname);
 
     // Load PDF
-    pdf = await getDocument(pdfURL).promise
-    await initPageContainers()
-    await loadVisiblePages()
-    window.addEventListener("scroll", debounce(loadVisiblePages, 100))
+    const pdf = await getDocument(pdfURL).promise
+    await initPageContainers(pdf)
+    await loadVisiblePages(pdf)
+    window.addEventListener("scroll", debounce(() => loadVisiblePages(pdf), 100))
 }
 
 main()
