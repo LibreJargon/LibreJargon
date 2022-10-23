@@ -2,7 +2,7 @@ import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPas
 import { getFirestore, doc, collection, setDoc, updateDoc, getDoc } from 'firebase/firestore'
 
 
-class AuthHandler {
+export class AuthHandler {
   constructor() {
     this.uid = undefined
     this.userCred = undefined
@@ -34,7 +34,7 @@ class AuthHandler {
 }
 
 
-class DatabaseHandler {
+export class DatabaseHandler {
   constructor() {
     this.database = getFirestore(window.FIREBASE_APP);
   }
