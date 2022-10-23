@@ -13,6 +13,6 @@
     "scripts": {
         "check": "tsc --noEmit",
         "build": "parcel build src/manifest.json --config @parcel/config-webextension",
-        "run": "web-ext run -s dist"
+        "run": "web-ext run -s dist --target chromium"
     }
 }

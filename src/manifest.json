@@ -5,7 +5,7 @@
     "background": {
         "scripts": ["background.js"]
     },
-    "permissions": ["*://*/*.pdf"],
+    "permissions": ["tabs", "host", "http://*/*", "https://*/*", "*://*/*.pdf"],
     "browser_action": {},
     "web_accessible_resources": [
         "viewer/viewer.html"
