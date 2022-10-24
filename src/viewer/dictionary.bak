@@ -1,0 +1,16 @@
+console.log("Script Loaded")
+var berdVar = document.getElementById("berd")
+function animation(berd) {
+	if (berd.src == "Berd1.png") {
+		berd.src = "Berd2.png"
+	}
+	else {
+		berd.src = "Berd1.png"
+	}
+	setTimeout(function() {animation(berd)}, 500)
+}
+if (berd != null) {
+	console.log("Animation Started")
+	//animation(berdVar)
+}
+console.log("Null type")
