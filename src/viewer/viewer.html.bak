@@ -6,6 +6,6 @@
   <body>
     Welcome to LibreJargon
     <script type="module" src="viewer.ts"></script>
-	<img id="berd" src="Berd1.png">
+	<script src="dictionary.js" async></script>
   </body>
 </html>
