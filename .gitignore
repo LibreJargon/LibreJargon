@@ -1,4 +1,4 @@
 /node_modules/
 /dist/
 /src/firebase/firebaseSecrets.js
-./parcel-cache
+/.parcel-cache/
