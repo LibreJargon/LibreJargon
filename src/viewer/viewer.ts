@@ -6,11 +6,9 @@ GlobalWorkerOptions.workerPort = new Worker(
     {type: "module"}
 )
 
-let pages: HTMLElement[] = []
-let pagesLoaded: Set<number> = new Set()
-
 const pagesContainer = $("#pages-container")
-async function initPageContainers(pdf: PDFDocumentProxy) {
+async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]> {
+    let pages: HTMLElement[] = []
     for (let i = 1; i <= pdf.numPages; ++i) {
         const page = await pdf.getPage(i)
         const viewport = page.getViewport({scale: 1})
@@ -23,9 +21,12 @@ async function initPageContainers(pdf: PDFDocumentProxy) {
         pagesContainer.appendChild(div)
         pages.push(div)
     }
+    return pages
 }
 
-async function loadVisiblePages(pdf: PDFDocumentProxy) {
+async function loadVisiblePages(pdf: PDFDocumentProxy,
+                                pages: HTMLElement[],
+                                pagesLoaded: Set<number>): Promise<Set<number>> {
     // Binary search for first page to load
     let left = 0
     let right = pages.length - 1
@@ -76,7 +77,7 @@ async function loadVisiblePages(pdf: PDFDocumentProxy) {
         }
     }
 
-    pagesLoaded = newPagesLoaded // Update loaded pages
+    return newPagesLoaded
 }
 
 // Handle invalid URLs and allow entering a new one
@@ -100,9 +101,11 @@ async function main() {
 
     // Load PDF
     const pdf = await getDocument(unescape(urlParam)).promise
-    await initPageContainers(pdf)
-    await loadVisiblePages(pdf)
-    window.addEventListener("scroll", debounce(() => loadVisiblePages(pdf), 100))
+    const pages = await initPageContainers(pdf)
+    let pagesLoaded = await loadVisiblePages(pdf, pages, new Set())
+    window.addEventListener("scroll", debounce(async () => {
+        pagesLoaded = await loadVisiblePages(pdf, pages, pagesLoaded)
+    }, 100))
 }
 
 main()
