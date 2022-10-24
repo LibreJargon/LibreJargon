@@ -33,7 +33,7 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
 
     while (left != right) {
         const idx = Math.floor((left + right) / 2)
-        const bottom = pages[idx].getBoundingClientRect().bottom
+        const bottom = pages[idx].getBoundingClientRect().bottom + window.innerHeight
         if (bottom < 0) {
             left = idx + 1
         } else {
@@ -45,7 +45,7 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
     const pagesToLoad: Set<number> = new Set()
     do {
         pagesToLoad.add(left)
-    } while (++left < pages.length && pages[left].getBoundingClientRect().top <= window.innerHeight)
+    } while (++left < pages.length && pages[left].getBoundingClientRect().top <= 2 * window.innerHeight)
 
     // Unload unneeded pages
     for (const pageIdx of pagesLoaded.keys()) {
