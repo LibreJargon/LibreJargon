@@ -16,3 +16,6 @@ export function debounce(func: () => void, timeout: number) {
         }
     }
 }
+
+export const $: <E extends HTMLElement>(selector: string) => E
+    = selector => document.querySelector(selector)!
