@@ -98,8 +98,14 @@ async function main() {
     // Get URL
     const urlParam = (new URL(document.location.href)).searchParams.get("url")
 
-    if (urlParam == null) {
+    if (!urlParam) {
         return showUrlError("No PDF provided")
+    }
+
+    try {
+        new URL(urlParam)
+    } catch (exception) {
+        return showUrlError(`Invalid url: ${urlParam}`)
     }
 
     // Load PDF
