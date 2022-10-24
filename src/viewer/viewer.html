@@ -3,7 +3,22 @@
   <head>
     <title>LibreJargon</title>
   </head>
+  <style>
+    #url-error-container {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+    }
+  </style>
   <body>
+    <div id="url-error-container">
+      <p id="url-error-message"></p>
+      <label for="url-error-input">
+        Enter the URL of a PDF:
+        <input id="url-error-input">
+        <button id="url-error-input-submit">Go</button>
+      </label>
+    </div>
     <div id="pages-container"></div>
     <script type="module" src="viewer.ts"></script>
   </body>

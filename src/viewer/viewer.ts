@@ -1,5 +1,5 @@
 import { PDFDocumentProxy, getDocument, GlobalWorkerOptions } from "pdfjs-dist"
-import { debounce } from "./utils"
+import { $, debounce } from "./utils"
 
 GlobalWorkerOptions.workerPort = new Worker(
     new URL("/node_modules/pdfjs-dist/build/pdf.worker.js", import.meta.url),
@@ -9,7 +9,7 @@ GlobalWorkerOptions.workerPort = new Worker(
 let pages: HTMLElement[] = []
 let pagesLoaded: Set<number> = new Set()
 
-const pagesContainer = document.getElementById("pages-container")!
+const pagesContainer = $("#pages-container")
 async function initPageContainers(pdf: PDFDocumentProxy) {
     for (let i = 1; i <= pdf.numPages; ++i) {
         const page = await pdf.getPage(i)
@@ -79,14 +79,27 @@ async function loadVisiblePages(pdf: PDFDocumentProxy) {
     pagesLoaded = newPagesLoaded // Update loaded pages
 }
 
+// Handle invalid URLs and allow entering a new one
+function showUrlError(message: string) {
+    $("#url-error-message").innerText = message
+    $("#url-error-container").style.display = "block"
+
+    $("#url-error-input-submit").onclick = () => {
+        const newUrlInput = $<HTMLInputElement>("input#url-error-input")
+        document.location = `${document.location.origin}${document.location.pathname}?url=${newUrlInput.value}`
+    }
+}
+
 async function main() {
     // Get URL
-    const url = new URL(document.location.href)
-    const pdfURL = atob(unescape(url.searchParams.get("url")!))
-    history.replaceState(null, "", url.origin + url.pathname);
+    const urlParam = (new URL(document.location.href)).searchParams.get("url")
+
+    if (urlParam == null) {
+        return showUrlError("No PDF provided")
+    }
 
     // Load PDF
-    const pdf = await getDocument(pdfURL).promise
+    const pdf = await getDocument(unescape(urlParam)).promise
     await initPageContainers(pdf)
     await loadVisiblePages(pdf)
     window.addEventListener("scroll", debounce(() => loadVisiblePages(pdf), 100))
