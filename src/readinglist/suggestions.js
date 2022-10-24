@@ -3,7 +3,9 @@ const arxiv = require('arxiv-api');
 
 
 
-suggestionsArxiv(data, size) {
+
+
+async function suggestionsArxiv(data, size) {
   const includeArr = data.map((d) => {
     return {name: d}
   })
@@ -17,5 +19,14 @@ suggestionsArxiv(data, size) {
     maxResults: size,
 });
 
-return papers
+return papers.map((p) => {
+  return {
+    link: p.id,
+    title: p.title
+  }
+})
 }
+
+
+
+suggestionsArxiv(["game", "combinatoric"], 5).then((paper) => console.log(paper))
