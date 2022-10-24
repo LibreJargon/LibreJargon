@@ -26,7 +26,7 @@ async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]>
 
 async function loadVisiblePages(pdf: PDFDocumentProxy,
                                 pages: HTMLElement[],
-                                pagesLoaded: Set<number>): Promise<Set<number>> {
+                                pagesLoaded: Map<number, boolean>) {
     // Binary search for first page to load
     let left = 0
     let right = pages.length - 1
@@ -42,42 +42,45 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
     }
 
     // Linear search for last page to load
-    const newPagesLoaded: Set<number> = new Set()
+    const pagesToLoad: Set<number> = new Set()
     do {
-        newPagesLoaded.add(left)
+        pagesToLoad.add(left)
     } while (++left < pages.length && pages[left].getBoundingClientRect().top <= window.innerHeight)
 
-    // Loop through unloaded pages
-    for (const pageIdx of newPagesLoaded) {
-        if (!pagesLoaded.has(pageIdx)) {
-            const page = await pdf.getPage(pageIdx + 1)
-            const viewport = page.getViewport({scale: 1})
-
-            const canvas = document.createElement("canvas")
-            canvas.width = Math.floor(viewport.width)
-            canvas.height = Math.floor(viewport.height)
-
-            const div = pages[pageIdx]
-            canvas.style.width = div.style.width
-            canvas.style.height = div.style.height
-
-            page.render({
-                canvasContext: canvas.getContext("2d")!,
-                viewport: viewport
-            })
-
-            div.appendChild(canvas)
-        }
-    }
-
     // Unload unneeded pages
-    for (const pageIdx of pagesLoaded) {
-        if (!newPagesLoaded.has(pageIdx)) {
+    for (const pageIdx of pagesLoaded.keys()) {
+        if (!pagesToLoad.has(pageIdx) && pagesLoaded.get(pageIdx) === true) {
+            pagesLoaded.delete(pageIdx)
             pages[pageIdx].replaceChildren()
         }
     }
 
-    return newPagesLoaded
+    // Loop through unloaded pages
+    for (const pageIdx of pagesToLoad) {
+        if (!pagesLoaded.has(pageIdx)) {
+            const promise = pdf.getPage(pageIdx + 1).then(page => {
+                const viewport = page.getViewport({scale: 1})
+
+                const canvas = document.createElement("canvas")
+                canvas.width = Math.floor(viewport.width)
+                canvas.height = Math.floor(viewport.height)
+
+                const div = pages[pageIdx]
+                canvas.style.width = div.style.width
+                canvas.style.height = div.style.height
+
+                page.render({
+                    canvasContext: canvas.getContext("2d")!,
+                    viewport: viewport
+                })
+
+                div.appendChild(canvas)
+                pagesLoaded.set(pageIdx, true)
+            })
+
+            pagesLoaded.set(pageIdx, false)
+        }
+    }
 }
 
 // Handle invalid URLs and allow entering a new one
@@ -102,10 +105,9 @@ async function main() {
     // Load PDF
     const pdf = await getDocument(unescape(urlParam)).promise
     const pages = await initPageContainers(pdf)
-    let pagesLoaded = await loadVisiblePages(pdf, pages, new Set())
-    window.addEventListener("scroll", debounce(async () => {
-        pagesLoaded = await loadVisiblePages(pdf, pages, pagesLoaded)
-    }, 100))
+    const pagesLoaded = new Map()
+    await loadVisiblePages(pdf, pages, pagesLoaded)
+    window.addEventListener("scroll", debounce(() => loadVisiblePages(pdf, pages, pagesLoaded), 100))
 }
 
 main()
