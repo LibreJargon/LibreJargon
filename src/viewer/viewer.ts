@@ -1,6 +1,27 @@
 import { PDFDocumentProxy, getDocument, GlobalWorkerOptions } from "pdfjs-dist"
 import { $, debounce } from "./utils"
 
+declare module "pdfjs-dist";
+
+type TokenText = {
+  str: string;
+};
+
+type PageText = {
+  items: TokenText[];
+};
+
+type PdfPage = {
+  getTextContent: () => Promise<PageText>;
+};
+
+type Pdf = {
+  numPages: number;
+  getPage: (pageNo: number) => Promise<PdfPage>;
+};
+
+type PDFSource = Buffer | string;
+
 GlobalWorkerOptions.workerPort = new Worker(
     new URL("/node_modules/pdfjs-dist/build/pdf.worker.js", import.meta.url),
     {type: "module"}
@@ -94,6 +115,25 @@ function showUrlError(message: string) {
     }
 }
 
+const getPageText = async (pdf: Pdf, pageNo: number) => {
+    const page = await pdf.getPage(pageNo);
+    const tokenizedText = await page.getTextContent();
+    const pageText = tokenizedText.items.map(token => token.str).join("");
+    return pageText;
+  };
+  
+  /* see example of a PDFSource below */
+  export const getPDFText = async (source: PDFSource): Promise<string> => {
+    const pdf: Pdf = await getDocument(source).promise;
+    const maxPages = pdf.numPages;
+    const pageTextPromises = [];
+    for (let pageNo = 1; pageNo <= maxPages; pageNo += 1) {
+      pageTextPromises.push(getPageText(pdf, pageNo));
+    }
+    const pageTexts = await Promise.all(pageTextPromises);
+    return pageTexts.join(" ");
+  };
+
 async function main() {
     // Get URL
     const urlParam = (new URL(document.location.href)).searchParams.get("url")
@@ -114,6 +154,7 @@ async function main() {
     const pagesLoaded = new Map()
     await loadVisiblePages(pdf, pages, pagesLoaded)
     window.addEventListener("scroll", debounce(() => loadVisiblePages(pdf, pages, pagesLoaded), 100))
+    console.log(getPDFText(urlParam))
 }
 
 main()
