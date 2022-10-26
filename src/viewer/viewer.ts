@@ -58,7 +58,7 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
     // Loop through unloaded pages
     for (const pageIdx of pagesToLoad) {
         if (!pagesLoaded.has(pageIdx)) {
-            const promise = pdf.getPage(pageIdx + 1).then(page => {
+            const promise = pdf.getPage(pageIdx + 1).then(async page => {
                 const viewport = page.getViewport({scale: 1})
 
                 const canvas = document.createElement("canvas")
@@ -69,12 +69,12 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
                 canvas.style.width = div.style.width
                 canvas.style.height = div.style.height
 
-                page.render({
+                div.appendChild(canvas)
+
+                await page.render({
                     canvasContext: canvas.getContext("2d")!,
                     viewport: viewport
-                })
-
-                div.appendChild(canvas)
+                }).promise
                 pagesLoaded.set(pageIdx, true)
             })
 
