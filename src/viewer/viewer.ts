@@ -1,5 +1,7 @@
 import { PDFDocumentProxy, getDocument, GlobalWorkerOptions } from "pdfjs-dist"
-import { $, debounce } from "./utils"
+import type { TextItem } from "pdfjs-dist/types/src/display/api"
+import { $, debounce, calculateFontAscent } from "./utils"
+
 
 GlobalWorkerOptions.workerPort = new Worker(
     new URL("/node_modules/pdfjs-dist/build/pdf.worker.js", import.meta.url),
@@ -68,13 +70,40 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
                 const div = pages[pageIdx]
                 canvas.style.width = div.style.width
                 canvas.style.height = div.style.height
+                const ctx = canvas.getContext("2d")!
 
                 div.appendChild(canvas)
 
-                await page.render({
-                    canvasContext: canvas.getContext("2d")!,
-                    viewport: viewport
-                }).promise
+                const [_, text] = await Promise.all([
+                    page.render({canvasContext: ctx, viewport: viewport}).promise,
+                    page.getTextContent()
+                ])
+
+                for (const item of <TextItem[]>text.items) {
+                    let [a, b, c, d, e, f] = item.transform
+
+                    const fontAscent = calculateFontAscent(text.styles[item.fontName].fontFamily)
+
+                    const x1 = item.width / item.height
+                    const y1 = fontAscent
+
+                    let g = a * x1 + c * y1 + e
+                    let h = b * x1 + d * y1 + f
+
+                    e -= c * (1 - fontAscent)
+                    f -= d * (1 - fontAscent)
+
+                    f = canvas.height - f
+                    h = canvas.height - h
+
+                    ctx.beginPath()
+                    ctx.moveTo(e, f)
+                    ctx.lineTo(e, h)
+                    ctx.lineTo(g, h)
+                    ctx.lineTo(g, f)
+                    ctx.lineTo(e, f)
+                    ctx.stroke()
+                }
                 pagesLoaded.set(pageIdx, true)
             })
 
