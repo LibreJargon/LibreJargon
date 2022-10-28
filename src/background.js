@@ -1,8 +1,6 @@
 const browser = require("webextension-polyfill")
 
 browser.browserAction.onClicked.addListener(tab => {
-    browser.tabs.update(
-        tab.id,
-        {url: browser.runtime.getURL("readinglist/readinglist.html")}
-    )
+    const encodedURL = escape(tab.url)
+    browser.tabs.update(tab.id, {url: `viewer/viewer.html?url=${encodedURL}`})
 })
