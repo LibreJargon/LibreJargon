@@ -1,18 +1,10 @@
-/*const browser = require("webextension-polyfill")
-
-browser.browserAction.onClicked.addListener(tab => {
-    browser.tabs.update(
-        tab.id,
-        {url: browser.runtime.getURL("viewer/viewer.html")}
-    )
-	var url = "https://api.dictionaryapi.dev/api/v2/entries/en/virtualization"
+function changeJargon(word) {
+	var url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + word
 	fetch(url)
 	.then((response) => response.json())
-	.then((data) => console.log(data));
-})
-
-window.addEventListener('load', function () {
-	console.log("loaded")
-	document.getElementById("berd").src = "Berd2.png"
-})*/
-console.log("PDF FOUND")
+	.then((data) => document.body.innerHTML = document.body.innerHTML.replace(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + data[0].meanings[0].definitions[0].definition + "</div></div>")
+	);
+}
+//This function replaces any text in the html, so could in theory with certain words break the document
+changeJargon("algorithm")
+changeJargon("computer")
