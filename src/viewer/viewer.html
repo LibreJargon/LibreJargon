@@ -1,12 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>LibreJargon</title>
+	<title>LibreJargon</title>
+	<style>
+		.jargon {
+			position: relative;
+			display: inline-block;
+		}
+		.jargonWord {
+			background: yellow;
+		}
+		.jargonDefinition {
+			display:none;
+			position: absolute;
+			background: orange;
+			min-width: 500px;
+		}
+		.jargon:hover .jargonDefinition {
+			display:block;
+		}
+		
+	</style>
   </head>
   <body>
-    Welcome to LibreJargon
-	One example of jargon is the word: virtualization.
+    Welcome to LibreJargon!
+	<br>
+	One example of jargon is the word: algorithm. Another example is computer. I wonder what algorithm means.
+	<br>
+	----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     <script type="module" src="viewer.ts"></script>
-	<script src="dictionary.js" async></script>
+	<script src="dictionary.js"></script>
   </body>
 </html>
