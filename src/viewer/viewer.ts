@@ -1,7 +1,8 @@
-import { PDFDocumentProxy, getDocument, GlobalWorkerOptions } from "pdfjs-dist"
-import type { TextItem } from "pdfjs-dist/types/src/display/api"
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
 import { $, debounce, calculateFontAscent } from "./utils"
 
+import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
+import type { TextItem } from "pdfjs-dist/types/src/display/api"
 
 GlobalWorkerOptions.workerPort = new Worker(
     new URL("/node_modules/pdfjs-dist/build/pdf.worker.js", import.meta.url),
@@ -9,6 +10,7 @@ GlobalWorkerOptions.workerPort = new Worker(
 )
 
 const pagesContainer = $("#pages-container")
+const textContainer = $("#text-container")
 async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]> {
     let pages: HTMLElement[] = []
     for (let i = 1; i <= pdf.numPages; ++i) {
@@ -22,8 +24,22 @@ async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]>
 
         pagesContainer.appendChild(div)
         pages.push(div)
+
+        const textDiv = document.createElement("div")
+        textContainer.appendChild(textDiv)
+        loadTextContainer(page, textDiv)
     }
     return pages
+}
+
+async function loadTextContainer(page: PDFPageProxy, container: HTMLElement) {
+    const text = await page.getTextContent()
+
+    for (const item of <TextItem[]>text.items) {
+        const span = document.createElement("div")
+        span.innerText = item.str
+        container.appendChild(span)
+    }
 }
 
 async function loadVisiblePages(pdf: PDFDocumentProxy,
