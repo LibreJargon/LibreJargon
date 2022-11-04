@@ -5,8 +5,10 @@
     "background": {
         "scripts": ["background.js"]
     },
-    "permissions": ["*://*/*.pdf"],
-    "browser_action": {},
+    "permissions": ["tabs", "*://*/*.pdf"],
+    "browser_action": {
+      "default_popup": "authentication/auth.html"
+    },
     "web_accessible_resources": [
         "viewer/viewer.html"
     ]
