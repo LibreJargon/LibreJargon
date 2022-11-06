@@ -6,7 +6,6 @@ import { initializeApp } from 'firebase/app'
 import { firebaseConfig } from './firebaseSecrets'
 
 const FIREBASE_APP = initializeApp(firebaseConfig)
-window.database = undefined;
 
 export class AuthHandler {
   constructor() {
@@ -21,7 +20,6 @@ export class AuthHandler {
     } catch (e) {
       return undefined
     }
-    window.database = getFirestore(FIREBASE_APP);
     this.uid = this.userCred.user.uid;
     return this.uid
   }
@@ -32,7 +30,7 @@ export class AuthHandler {
     } catch (e) {
       return undefined
     }
-    window.database = getFirestore(FIREBASE_APP);
+
     this.uid = this.userCred.user.uid;
     return this.uid
   }
@@ -51,37 +49,43 @@ export class AuthHandler {
 
 
 export class DatabaseHandler {
-  constructor() {}
+  constructor() {
+    this.database = getFirestore(FIREBASE_APP);
+  }
 
   async updateSettings(settingsConfig) {
-    if(!window.database) return undefined;
-    return await updateDoc(window.database, settingsConfig);
+    if(!this.database) {return undefined;}
+    return await updateDoc(this.database, settingsConfig);
   }
 
   async getSettings(userId) {
-    if(!window.database) return undefined;
-    return await getDoc(doc(window.database, "settings", userId))
+    if(!this.database){ return undefined;}
+    return await getDoc(doc(this.database, "settings", userId))
   }
 
   async getReadingList(userId) {
-    if(!window.database) return undefined;
-    const docs = await getDocs(collection(window.database, "users", userId, "readinglist"));
+    if(!this.database) {return undefined;}
+    const docs = await getDocs(collection(this.database, "users", userId, "readinglist"));
     const fileMap = {}
     docs.forEach((el) => {
-      fileMap[el.id] = el.data;
+      fileMap[el.id] = el.data();
     })
 
     return fileMap
   }
 
   async addToReadingList(listItemObj, userId, nonce) {
-    if(!window.database) return undefined;
-    return await setDoc(doc(window.database, "users", userId, "readinglist", nonce), listItemObj)
+    console.log("Adding to rl")
+    if(!this.database) {return undefined;}
+    console.log("PARAMS", listItemObj, nonce, userId)
+    const docInfo = await setDoc(doc(this.database, "users", userId, "readinglist", nonce), listItemObj)
+    console.log(docInfo);
+    return docInfo;
   }
 
   async rmFromList(userId, nonce) {
-    if(!window.database) return undefined;
-    return await deleteDoc(doc(window.database, "users", userId, "readinglist", nonce));
+    if(!this.database) {return undefined;}
+    return await deleteDoc(doc(this.database, "users", userId, "readinglist", nonce));
   }
 
 }

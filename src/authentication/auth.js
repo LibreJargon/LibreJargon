@@ -8,10 +8,13 @@ function signIntoAccount() {
   const pwd = document.getElementById("sipwd").value
   const errormsg = document.getElementById("signinerror");
   window.authHandler.signIn(eml, pwd).then((res) => {
-    if(res !== "error") {
+    console.log(res)
+    if(res) {
       browser.browserAction.setPopup({
-        popup: '/readinglist/readinglist.html'
+        popup: '../readinglist/readinglist.html'
       })
+      browser.browserAction.getPopup({popup: '../readinglist/readinglist.html'});
+      browser.browserAction.openPopup();
     } else {
       errormsg.style.visibility = "visible"
     }
@@ -36,7 +39,7 @@ function signUpForAccount() {
     window.authHandler.registerUser(eml, pwd).then((res) => {
       if(res !== "error") {
         browser.browserAction.setPopup({
-          popup: '/readinglist/readinglist.html'
+          popup: '../readinglist/readinglist.html'
         })
       } else {
         errormsg.style.visibility = "visible"
