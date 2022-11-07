@@ -2,7 +2,7 @@ import { AuthHandler } from "../firebase/firebaseClients"
 const browser = require("webextension-polyfill")
 window.authHandler = new AuthHandler()
 
-function signIntoAccount() {
+export function signIntoAccount() {
   console.log("signing in")
   const eml = document.getElementById("sieml").value
   const pwd = document.getElementById("sipwd").value
@@ -22,7 +22,7 @@ function signIntoAccount() {
 }
 
 
-function signUpForAccount() {
+export function signUpForAccount() {
   console.log("signing Up")
   const eml = document.getElementById("sueml").value
   const pwd = document.getElementById("signuppwd").value
@@ -60,4 +60,4 @@ function closeSignInErr() {
 document.getElementById('signin-btn').addEventListener('click', signIntoAccount)
 document.getElementById('signup-btn').addEventListener('click', signUpForAccount)
 document.getElementById('signupclosebtn').addEventListener('click', closeSignUpErr);
-document.getElementById('signinclosebtn').addEventListener('click', closeSignUpErr);
+document.getElementById('signinclosebtn').addEventListener('click', closeSignInErr);
