@@ -10,7 +10,6 @@
       "default_popup": "authentication/auth.html"
     },
     "web_accessible_resources": [
-        "viewer/viewer.html",
-        "readinglist/readinglist.html"
+        "viewer/viewer.html"
     ]
 }

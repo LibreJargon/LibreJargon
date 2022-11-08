@@ -4,6 +4,7 @@ import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPas
 import { getFirestore, doc, collection, setDoc, updateDoc, getDoc, addDoc, deleteDoc, getDocs } from 'firebase/firestore'
 import { initializeApp } from 'firebase/app'
 import { firebaseConfig } from './firebaseSecrets'
+import { renderRLItem } from '../authentication/readinglist'
 
 const FIREBASE_APP = initializeApp(firebaseConfig)
 
@@ -75,11 +76,10 @@ export class DatabaseHandler {
   }
 
   async addToReadingList(listItemObj, userId, nonce) {
-    console.log("Adding to rl")
     if(!this.database) {return undefined;}
-    console.log("PARAMS", listItemObj, nonce, userId)
     const docInfo = await setDoc(doc(this.database, "users", userId, "readinglist", nonce), listItemObj)
-    console.log(docInfo);
+    renderRLItem(listItemObj.title, listItemObj.link, nonce)
+
     return docInfo;
   }
 

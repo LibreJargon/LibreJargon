@@ -3,27 +3,28 @@
   <head>
     <title>LibreJargon</title>
     <link rel="stylesheet" href="auth.css">
+    <script type="module" src="main.js"/>
   </head>
-  <body>
+  <div id="auth-div" class="auth-div">
     <h1>Welcome to LibreJargon</h1>
     <h2>Sign In</h2>
     <div class="alert" id="signinerror">
-      <span class="closebtn" id="signinclosebtn";">&times;</span>
+      <span class="closebtn" id="signinclosebtn">&times;</span>
       <strong>Error:</strong> Invalid email or password
     </div>
-    <form>
+    <form class="auth-form">
       <label for="eml"><b>Email</b></label>
       <input type="email" placeholder="Enter Email" name="eml" id="sieml" required/>
       <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="psw" id="sipwd" required/>
     </form>
-    <button id="signin-btn">Sign In</button>
+    <button id="signin-btn" class="auth-btn">Sign In</button>
     <h2>Or Sign Up</h2>
     <div class="alert" id="signuperror">
       <span class="closebtn" id="signupclosebtn">&times;</span>
       <strong>Error:</strong> Invalid email or password
     </div>
-    <form>
+    <form class="auth-form">
       <label for="regeml"><b>Email</b></label>
       <input type="email" placeholder="Enter Email" name="regeml" id="sueml" required/>
       <label for="regpsw"><b>Password</b></label>
@@ -31,8 +32,41 @@
       <label for="coregpsw"><b>Confirm Password</b></label>
       <input type="password" placeholder="Re-enter Password" name="coregpsw" id="confirmsignuppwd" required/>
     </form>
-    <button id="signup-btn">Sign Up</button>
-    <script type="module" src="auth.js"/>
-
-  </body>
+    <button id="signup-btn" class="auth-btn">Sign Up</button>
+  </div>
+  <div id="reading-list-div" class="rl-div">
+    <div class="tab">
+      <button class="tablinks" id="rl-tab">Reading List</button>
+      <button class="tablinks" id="sugg-tab">Suggestions</button>
+      <button class="tablinks" id="sets-tab">Settings</button>
+    </div>
+    <div id="rl" class="tabcontent">
+      <h1>Reading List</h1>
+      <div>
+        <ul id="reader-list" class="rl-list"></ul>
+      </div>
+      <label for="add-title"><b>Title</b></label>
+      <input type="text" name="add-title" id="add-title" required/>
+      <label for="add-link"><b>Link</b></label>
+      <input type="text" name="add-link" id="add-link" required/>
+      <button id="add-rl">Add to List</button>
+    </div>
+    <div id="sugg" class="tabcontent">
+      <h1>Suggestions</h1>
+      <div>
+        <ul id="suggestion-list" class="rl-list"></ul>
+      </div>
+    </div>
+    <div id="sets" class="tabcontent">
+      <h1>Settings</h1>
+      <div>
+        <ul id="reader-list" class="rl-list"></ul>
+      </div>
+      <label for="add-title"><b>Title</b></label>
+      <input type="text" name="add-title" id="add-title" required/>
+      <label for="add-link"><b>Link</b></label>
+      <input type="text" name="add-link" id="add-link" required/>
+      <button id="add-rl">Add to List</button>
+    </div>
+  </div>
 </html>
