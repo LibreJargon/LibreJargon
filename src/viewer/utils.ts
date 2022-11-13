@@ -1,3 +1,5 @@
+import type { TextItem, TextContent } from "pdfjs-dist/types/src/display/api"
+
 export function debounce(func: () => void, timeout: number) {
     let lastCall = 0
     let timer: number | undefined = undefined
@@ -31,7 +33,7 @@ ascentCanvas.width = ascentCanvas.height = DEFAULT_FONT_SIZE
 const ascentCtx = ascentCanvas.getContext("2d")!
 ascentCtx.strokeStyle = "red"
 
-export function calculateFontAscent(fontFamily: string) {
+function calculateFontAscent(fontFamily: string) {
     const cachedAscent = ascentCache.get(fontFamily)
     if (cachedAscent) {
         return cachedAscent
@@ -69,4 +71,22 @@ export function calculateFontAscent(fontFamily: string) {
 
     ascentCache.set(fontFamily, DEFAULT_FONT_ASCENT)
     return DEFAULT_FONT_ASCENT
+}
+
+export function calculateTextBounds(item: TextItem,
+                                    text: TextContent): [number, number, number, number] {
+    let [a, b, c, d, e, f] = item.transform
+
+    const fontAscent = calculateFontAscent(text.styles[item.fontName].fontFamily)
+
+    const x1 = item.width / item.height
+    const y1 = fontAscent
+
+    const g = a * x1 + c * y1 + e
+    const h = b * x1 + d * y1 + f
+
+    e -= c * (1 - fontAscent)
+    f -= d * (1 - fontAscent)
+
+    return [e, f, g, h]
 }

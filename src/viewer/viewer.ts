@@ -1,5 +1,5 @@
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
-import { $, debounce, calculateFontAscent } from "./utils"
+import { $, debounce, calculateTextBounds } from "./utils"
 
 import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
 import type { TextItem } from "pdfjs-dist/types/src/display/api"
@@ -96,28 +96,17 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
                 ])
 
                 for (const item of <TextItem[]>text.items) {
-                    let [a, b, c, d, e, f] = item.transform
+                    let [x1, y1, x2, y2] = calculateTextBounds(item, text)
 
-                    const fontAscent = calculateFontAscent(text.styles[item.fontName].fontFamily)
-
-                    const x1 = item.width / item.height
-                    const y1 = fontAscent
-
-                    let g = a * x1 + c * y1 + e
-                    let h = b * x1 + d * y1 + f
-
-                    e -= c * (1 - fontAscent)
-                    f -= d * (1 - fontAscent)
-
-                    f = canvas.height - f
-                    h = canvas.height - h
+                    y1 = canvas.height - y1
+                    y2 = canvas.height - y2
 
                     ctx.beginPath()
-                    ctx.moveTo(e, f)
-                    ctx.lineTo(e, h)
-                    ctx.lineTo(g, h)
-                    ctx.lineTo(g, f)
-                    ctx.lineTo(e, f)
+                    ctx.moveTo(x1, y1)
+                    ctx.lineTo(x1, y2)
+                    ctx.lineTo(x2, y2)
+                    ctx.lineTo(x2, y1)
+                    ctx.lineTo(x1, y1)
                     ctx.stroke()
                 }
                 pagesLoaded.set(pageIdx, true)
