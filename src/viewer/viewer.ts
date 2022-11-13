@@ -34,10 +34,45 @@ async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]>
 
 async function loadTextContainer(page: PDFPageProxy, container: HTMLElement) {
     const text = await page.getTextContent()
+    let prevUpper: number | null = null
+    let prevLower: number | null = null
+
+    let segments: string[] = []
 
     for (const item of <TextItem[]>text.items) {
+        const [left, lower, right, upper] = calculateTextBounds(item, text)
+        if (isNaN(left)) {
+            continue
+        }
+
+        // No previous text box
+        if (prevUpper == null || prevLower == null) {
+            [prevUpper, prevLower] = [upper, lower]
+            segments.push(item.str)
+            continue
+        }
+
+        // Check for significant overlap (over 1/3)
+        if (lower <= prevUpper &&
+            3 * (Math.min(upper, prevUpper) - Math.max(lower, prevLower)) >
+            Math.max(upper, prevUpper) - Math.min(lower, prevLower)) {
+            // If found, add to segments buffer
+            segments.push(item.str)
+        } else {
+            // Otherwise flush
+            const span = document.createElement("div")
+            span.innerText = segments.join(" ")
+            container.appendChild(span)
+
+            segments = [item.str]
+        }
+        [prevUpper, prevLower] = [upper, lower]
+    }
+
+    // Flush remaining segments
+    if (segments.length != 0) {
         const span = document.createElement("div")
-        span.innerText = item.str
+        span.innerText = segments.join(" ")
         container.appendChild(span)
     }
 }
