@@ -147,7 +147,10 @@ async function main() {
     const pages = await initPageContainers(pdf)
     const pagesLoaded = new Map()
     await loadVisiblePages(pdf, pages, pagesLoaded)
-    window.addEventListener("scroll", debounce(() => loadVisiblePages(pdf, pages, pagesLoaded), 100))
+    pagesContainer.addEventListener(
+        "scroll",
+        debounce(() => loadVisiblePages(pdf, pages, pagesLoaded), 100)
+    )
 }
 
 main()
