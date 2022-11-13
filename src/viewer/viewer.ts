@@ -97,6 +97,9 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
 
                 for (const item of <TextItem[]>text.items) {
                     let [x1, y1, x2, y2] = calculateTextBounds(item, text)
+                    if (isNaN(x1)) {
+                        continue
+                    }
 
                     y1 = canvas.height - y1
                     y2 = canvas.height - y2

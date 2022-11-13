@@ -75,6 +75,10 @@ function calculateFontAscent(fontFamily: string) {
 
 export function calculateTextBounds(item: TextItem,
                                     text: TextContent): [number, number, number, number] {
+    if (item.width == 0 || item.height == 0) {
+        return [NaN, NaN, NaN, NaN]
+    }
+
     let [a, b, c, d, e, f] = item.transform
 
     const fontAscent = calculateFontAscent(text.styles[item.fontName].fontFamily)
