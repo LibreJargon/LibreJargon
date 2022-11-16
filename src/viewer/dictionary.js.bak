@@ -16,5 +16,4 @@ function parseJSONJargon(word, json) {
 
 //This function replaces any text in the html, so could in theory with certain words break the document
 changeJargon("algorithm")
-//bug, defines in mid definition
-changeJargon("virtualization")
+//changeJargon("computer")
