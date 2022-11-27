@@ -1,7 +1,8 @@
-import { PDFDocumentProxy, getDocument, GlobalWorkerOptions } from "pdfjs-dist"
-import type { TextItem } from "pdfjs-dist/types/src/display/api"
-import { $, debounce, calculateFontAscent } from "./utils"
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
+import { $, debounce, calculateTextBounds } from "./utils"
 
+import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
+import type { TextItem } from "pdfjs-dist/types/src/display/api"
 
 GlobalWorkerOptions.workerPort = new Worker(
     new URL("/node_modules/pdfjs-dist/build/pdf.worker.js", import.meta.url),
@@ -9,6 +10,7 @@ GlobalWorkerOptions.workerPort = new Worker(
 )
 
 const pagesContainer = $("#pages-container")
+const textContainer = $("#text-container")
 async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]> {
     let pages: HTMLElement[] = []
     for (let i = 1; i <= pdf.numPages; ++i) {
@@ -22,8 +24,57 @@ async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]>
 
         pagesContainer.appendChild(div)
         pages.push(div)
+
+        const textDiv = document.createElement("div")
+        textContainer.appendChild(textDiv)
+        loadTextContainer(page, textDiv)
     }
     return pages
+}
+
+async function loadTextContainer(page: PDFPageProxy, container: HTMLElement) {
+    const text = await page.getTextContent()
+    let prevUpper: number | null = null
+    let prevLower: number | null = null
+
+    let segments: string[] = []
+
+    for (const item of <TextItem[]>text.items) {
+        const [left, lower, right, upper] = calculateTextBounds(item, text)
+        if (isNaN(left)) {
+            continue
+        }
+
+        // No previous text box
+        if (prevUpper == null || prevLower == null) {
+            [prevUpper, prevLower] = [upper, lower]
+            segments.push(item.str)
+            continue
+        }
+
+        // Check for significant overlap (over 1/3)
+        if (lower <= prevUpper &&
+            3 * (Math.min(upper, prevUpper) - Math.max(lower, prevLower)) >
+            Math.max(upper, prevUpper) - Math.min(lower, prevLower)) {
+            // If found, add to segments buffer
+            segments.push(item.str)
+        } else {
+            // Otherwise flush
+            const span = document.createElement("div")
+            span.innerText = segments.join(" ")
+            container.appendChild(span)
+
+            segments = [item.str]
+        }
+        [prevUpper, prevLower] = [upper, lower]
+    }
+
+    // Flush remaining segments
+    if (segments.length != 0) {
+        const span = document.createElement("div")
+        span.innerText = segments.join(" ")
+        container.appendChild(span)
+    }
 }
 
 async function loadVisiblePages(pdf: PDFDocumentProxy,
@@ -80,28 +131,20 @@ async function loadVisiblePages(pdf: PDFDocumentProxy,
                 ])
 
                 for (const item of <TextItem[]>text.items) {
-                    let [a, b, c, d, e, f] = item.transform
+                    let [x1, y1, x2, y2] = calculateTextBounds(item, text)
+                    if (isNaN(x1)) {
+                        continue
+                    }
 
-                    const fontAscent = calculateFontAscent(text.styles[item.fontName].fontFamily)
-
-                    const x1 = item.width / item.height
-                    const y1 = fontAscent
-
-                    let g = a * x1 + c * y1 + e
-                    let h = b * x1 + d * y1 + f
-
-                    e -= c * (1 - fontAscent)
-                    f -= d * (1 - fontAscent)
-
-                    f = canvas.height - f
-                    h = canvas.height - h
+                    y1 = canvas.height - y1
+                    y2 = canvas.height - y2
 
                     ctx.beginPath()
-                    ctx.moveTo(e, f)
-                    ctx.lineTo(e, h)
-                    ctx.lineTo(g, h)
-                    ctx.lineTo(g, f)
-                    ctx.lineTo(e, f)
+                    ctx.moveTo(x1, y1)
+                    ctx.lineTo(x1, y2)
+                    ctx.lineTo(x2, y2)
+                    ctx.lineTo(x2, y1)
+                    ctx.lineTo(x1, y1)
                     ctx.stroke()
                 }
                 pagesLoaded.set(pageIdx, true)
@@ -142,7 +185,10 @@ async function main() {
     const pages = await initPageContainers(pdf)
     const pagesLoaded = new Map()
     await loadVisiblePages(pdf, pages, pagesLoaded)
-    window.addEventListener("scroll", debounce(() => loadVisiblePages(pdf, pages, pagesLoaded), 100))
+    pagesContainer.addEventListener(
+        "scroll",
+        debounce(() => loadVisiblePages(pdf, pages, pagesLoaded), 100)
+    )
 }
 
 main()

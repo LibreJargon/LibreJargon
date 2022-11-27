@@ -4,10 +4,28 @@
     <title>LibreJargon</title>
   </head>
   <style>
+    html, body {
+        height: 100%;
+    }
+    body {
+        margin: 0;
+        display: flex;
+        overflow: hidden;
+    }
     #url-error-container {
         display: none;
         flex-direction: column;
         align-items: center;
+    }
+    #pages-container, #text-container {
+        height: 100%;
+        overflow-y: scroll;
+    }
+    #pages-container {
+        flex-shrink: 0;
+    }
+    #text-container {
+        flex-grow: 1;
     }
   </style>
   <body>
@@ -20,6 +38,7 @@
       </label>
     </div>
     <div id="pages-container"></div>
+    <div id="text-container"></div>
     <script type="module" src="viewer.ts"></script>
   </body>
 </html>
