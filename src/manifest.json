@@ -6,10 +6,9 @@
         "scripts": ["background.js"]
     },
     "permissions": ["tabs", "*://*/*.pdf"],
-    "browser_action": {
-      "default_popup": "authentication/auth.html"
-    },
+    "browser_action": {},
     "web_accessible_resources": [
-        "viewer/viewer.html"
+        "viewer/viewer.html",
+        "authentication/auth.html"
     ]
 }
