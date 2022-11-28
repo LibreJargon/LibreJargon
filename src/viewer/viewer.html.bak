@@ -22,12 +22,50 @@
 		
 	</style>
   </head>
+  <style>
+    html, body {
+        height: 100%;
+    }
+    body {
+        margin: 0;
+        display: flex;
+        overflow: hidden;
+    }
+    #url-error-container {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+    }
+    #pages-container, #text-container {
+        height: 100%;
+        overflow-y: scroll;
+    }
+    #pages-container {
+        flex-shrink: 0;
+    }
+    #text-container {
+        flex-grow: 1;
+    }
+  </style>
   <body>
+<<<<<<< HEAD
     Welcome to LibreJargon!
 	<br>
-	One example of jargon is the word: algorithm. Another example is computer. I wonder what algorithm means.
+	One example of jargon is the word: algorithm. Another example is virtualization. I wonder what algorithm means.
 	<br>
 	----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+=======
+    <div id="url-error-container">
+      <p id="url-error-message"></p>
+      <label for="url-error-input">
+        Enter the URL of a PDF:
+        <input id="url-error-input">
+        <button id="url-error-input-submit">Go</button>
+      </label>
+    </div>
+    <div id="pages-container"></div>
+    <div id="text-container"></div>
+>>>>>>> master
     <script type="module" src="viewer.ts"></script>
 	<script src="dictionary.js"></script>
   </body>
