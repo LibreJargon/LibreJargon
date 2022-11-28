@@ -5,12 +5,7 @@
     "background": {
         "scripts": ["background.js"]
     },
-	"content_scripts": [
-	{
-		"matches": ["<all_urls>"],
-		"js": ["./content/testReplace.js"]
-	}],
-    "permissions": ["*://*/*.pdf"],
+    "permissions": ["*://*/*.pdf", "contextMenus"],
     "browser_action": {},
     "web_accessible_resources": [
         "viewer/viewer.html"
