@@ -179,9 +179,7 @@ function parseJSONJargon(word, json) {
 	for (var key in pages) {
 		definition = pages[key].extract
 	}
-	
-	var textContainer = document.getElementById("text-container")
-	textContainer.innerHTML = textContainer.innerHTML.replace(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
+	//document.body.innerHTML = document.body.innerHTML.replace(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
 }
 
 function runDictionary() {
