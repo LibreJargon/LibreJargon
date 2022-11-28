@@ -180,8 +180,7 @@ function parseJSONJargon(word, json) {
 		definition = pages[key].extract
 	}
 	
-	var textContainer = document.getElementById("text-container")
-	textContainer.innerHTML = textContainer.innerHTML.replace(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
+	textContainer.innerHTML = textContainer.innerHTML.replaceAll(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
 }
 
 function runDictionary() {
@@ -215,7 +214,18 @@ async function main() {
         debounce(() => loadVisiblePages(pdf, pages, pagesLoaded), 100)
     )
 	
+	//Run any automated dictionary method
 	runDictionary()
+	
+	//Here let user add own jargon via highlighting (WIP and very buggy, so commented out for now)
+	textContainer.addEventListener(
+		"mouseup",
+		addJargon => {  
+			if(window.getSelection().toString().length){
+				//changeJargon(window.getSelection().toString());
+			}
+		}
+	)
 }
 
 main()
