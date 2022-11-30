@@ -222,7 +222,7 @@ async function main() {
 		"mouseup",
 		addJargon => {  
 			if(window.getSelection().toString().length){
-				//changeJargon(window.getSelection().toString());
+				changeJargon(window.getSelection().toString());
 			}
 		}
 	)
