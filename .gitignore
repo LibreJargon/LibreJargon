@@ -2,3 +2,6 @@
 /dist/
 /src/firebase/firebaseSecrets.js
 /.parcel-cache/
+/*.bak/
+/src/*.bak/
+/src/viewer/*.bak/
