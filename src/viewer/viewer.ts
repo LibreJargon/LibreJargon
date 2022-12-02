@@ -183,7 +183,7 @@ function parseJSONJargon(word, json) {
 	textContainer.innerHTML = textContainer.innerHTML.replaceAll(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
 }
 
-function runDictionary() {
+function refreshDictionary() {
 	//This function replaces any text in the html, so could in theory with certain words break the document
 	changeJargon("algorithm")
 	//bug, defines in mid definition
@@ -215,7 +215,7 @@ async function main() {
     )
 	
 	//Run any automated dictionary method
-	runDictionary()
+	refreshDictionary()
 	
 	//Here let user add own jargon via highlighting (WIP and very buggy, so commented out for now)
 	textContainer.addEventListener(
@@ -226,6 +226,13 @@ async function main() {
 			}
 		}
 	)
+	
+	$("#addJargonButton").onclick = () => {
+		console.log("clicked")
+        if(window.getSelection().toString().length){
+			changeJargon(window.getSelection().toString());
+		}
+    }
 }
 
 main()
