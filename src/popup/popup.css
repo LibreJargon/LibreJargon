@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.alert {
+  /* height: 0px; */
+  background-color: #f44336;
+  color: white;
+  visibility:hidden;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
+body {
+  width: 400px;
+  height: 100%;
+  background-color: skyblue;
+}
+
+.auth-div {
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.rl-list {
+  overflow: scroll;
+  height: 80%;
+  list-style: none;
+}
+
+.rl-div {
+  font-family: 'Roboto', sans-serif;
+  visibility:hidden;
+  display: flex;
+  flex-direction: column;
+  height: 0;
+  overflow: hidden;
+}
+
+.rl-li {
+  border: solid;
+  border-color: black;
+  border-width: 3px;
+}
+
+.auth-btn {
+  color: white;
+  width: 100px;
+  background-image: linear-gradient(darkblue, navy);
+  border: none;
+  border-radius: 10px;
+  transition: 0.5s;
+}
+
+.auth-btn :hover {
+  background-image: linear-gradient(black, navy);
+}
+
+.icons {
+  width: 20px;
+  height: 20px;
+  border:none;
+  background-color: white;
+  border-radius: 0px;
+}
+
+
+input {
+  width: 100%;
+}
+
+
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
