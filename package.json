@@ -13,7 +13,12 @@
       "typescript": "4.8.4",
       "util": "^0.12.5",
       "web-ext": "7.3.0",
-      "webextension-polyfill": "^0.10.0"
+      "webextension-polyfill": "^0.10.0",
+      "axios": ">=0.21.2",
+      "follow-redirects": ">=1.14.8",
+      "lodash": ">=4.17.21"
+
+
   },
   "scripts": {
       "check": "tsc --noEmit",
