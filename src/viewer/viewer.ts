@@ -173,6 +173,7 @@ function changeJargon(word) {
 	.then((data) => parseJSONJargon(word, data))
 }
 
+//In the current implementation, this replaces the innerHTML of the entire textcontainer, which replaces event listeners and such, may need to be changed.
 function parseJSONJargon(word, json) {
 	var pages = json.query.pages
 	var definition
@@ -184,13 +185,22 @@ function parseJSONJargon(word, json) {
 }
 
 function refreshDictionary() {
-	//This function replaces any text in the html, so could in theory with certain words break the document
-	changeJargon("algorithm")
-	//bug, defines in mid definition
-	changeJargon("virtualization")
+	
+}
+
+function prepareDictionary() {
+	$("#addJargonButton").onclick = () => {
+        console.log("clicked")
+        if(window.getSelection().toString().length){
+			changeJargon(window.getSelection().toString());
+		}
+		refreshDictionary()
+    }
 }
 
 async function main() {
+	prepareDictionary();
+	
     // Get URL
     const urlParam = (new URL(document.location.href)).searchParams.get("url")
 
@@ -213,26 +223,6 @@ async function main() {
         "scroll",
         debounce(() => loadVisiblePages(pdf, pages, pagesLoaded), 100)
     )
-	
-	//Run any automated dictionary method
-	refreshDictionary()
-	
-	//Here let user add own jargon via highlighting (WIP and very buggy, so commented out for now)
-	textContainer.addEventListener(
-		"mouseup",
-		addJargon => {  
-			if(window.getSelection().toString().length){
-				//changeJargon(window.getSelection().toString());
-			}
-		}
-	)
-	
-	$("#addJargonButton").onclick = () => {
-		console.log("clicked")
-        if(window.getSelection().toString().length){
-			changeJargon(window.getSelection().toString());
-		}
-    }
 }
 
 main()
