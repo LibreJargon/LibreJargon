@@ -39,20 +39,21 @@
 		position: absolute;
 		background: orange;
 		min-width: 500px;
+		z-index: 1;
 	}
 	.jargon:hover .jargonDefinition {
 		display:block;
 	}
 	.jargonButton {
 		position:fixed;
-		top:20px;
-		opacity: 0.2;
+		opacity: 0.4;
+		right: 20;
 	}
 	.jargonButton:hover {
 		opacity: 1.0;
 	}
 	.jargonSpacer {
-		top:20px;
+		height:20px
 	}
   </style>
   <body>
@@ -65,8 +66,8 @@
       </label>
     </div>
     <div id="pages-container"></div>
+	<button id="addJargonButton" class="jargonButton">Add Selected Text to Jargon List</button>
     <div id="text-container">
-		<button class="jargonButton" id="addJargonButton">Add Selected Text to Jargon List</button>
 		<div class="jargonSpacer">&nbsp</div>
 	</div>
     <script type="module" src="viewer.ts"></script>
