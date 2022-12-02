@@ -1,8 +1,17 @@
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
 import { $, debounce, calculateTextBounds } from "./utils"
+const browser = require("webextension-polyfill")
 
 import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
 import type { TextItem } from "pdfjs-dist/types/src/display/api"
+
+browser.tabs.getCurrent().then((tab: any) => {
+  browser.browserAction.setPopup({
+    popup: "/popup/popup.html",
+    tabId: tab.id
+  })
+})
+
 
 GlobalWorkerOptions.workerPort = new Worker(
     new URL("/node_modules/pdfjs-dist/build/pdf.worker.js", import.meta.url),
