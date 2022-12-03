@@ -207,7 +207,6 @@ function insertJargon(word, definition) {
 function prepareDictionary() {
 	//Enable Jargon Button
 	$("#addJargonButton").onclick = () => {
-        console.log("clicked")
         if(window.getSelection().toString().length){
 			changeJargon(window.getSelection().toString());
 		}
@@ -219,6 +218,8 @@ function prepareDictionary() {
 	for (var word in jargonList) {
 		changeJargon(word)
 	}*/
+	console.log("attempt")
+	console.log(self.rlMap[0])
 }
 
 async function main() {	
