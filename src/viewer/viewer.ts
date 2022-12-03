@@ -175,7 +175,41 @@ function showUrlError(message: string) {
     }
 }
 
+function changeJargon(word) {
+	var url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exchars=1200&exlimit=1&exintro&explaintext&format=json&titles=" + word
+	fetch(url)
+	.then((response) => response.json())
+	.then((data) => parseJSONJargon(word, data))
+}
+
+//In the current implementation, this replaces the innerHTML of the entire textcontainer, which replaces event listeners and such, may need to be changed.
+function parseJSONJargon(word, json) {
+	var pages = json.query.pages
+	var definition
+	for (var key in pages) {
+		definition = pages[key].extract
+	}
+	
+	textContainer.innerHTML = textContainer.innerHTML.replaceAll(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
+}
+
+function refreshDictionary() {
+	
+}
+
+function prepareDictionary() {
+	$("#addJargonButton").onclick = () => {
+        console.log("clicked")
+        if(window.getSelection().toString().length){
+			changeJargon(window.getSelection().toString());
+		}
+		refreshDictionary()
+    }
+}
+
 async function main() {
+	prepareDictionary();
+	
     // Get URL
     const urlParam = (new URL(document.location.href)).searchParams.get("url")
 
