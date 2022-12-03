@@ -20,6 +20,7 @@ GlobalWorkerOptions.workerPort = new Worker(
 
 const pagesContainer = $("#pages-container")
 const textContainer = $("#text-container")
+
 async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]> {
     let pages: HTMLElement[] = []
     for (let i = 1; i <= pdf.numPages; ++i) {
@@ -38,6 +39,7 @@ async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]>
         textContainer.appendChild(textDiv)
         loadTextContainer(page, textDiv)
     }
+	prepareDictionary();
     return pages
 }
 
@@ -175,6 +177,7 @@ function showUrlError(message: string) {
     }
 }
 
+//Find the definition for a word and insert it
 function changeJargon(word) {
 	var url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exchars=1200&exlimit=1&exintro&explaintext&format=json&titles=" + word
 	fetch(url)
@@ -182,34 +185,43 @@ function changeJargon(word) {
 	.then((data) => parseJSONJargon(word, data))
 }
 
-//In the current implementation, this replaces the innerHTML of the entire textcontainer, which replaces event listeners and such, may need to be changed.
+//Process the json definition and insert it
 function parseJSONJargon(word, json) {
 	var pages = json.query.pages
 	var definition
 	for (var key in pages) {
 		definition = pages[key].extract
+		break
 	}
 	
+	insertJargon(word, definition)
+}
+
+//Insert the Jargon into the HTML for UI
+function insertJargon(word, definition) {
+	//TODO: This will break if jargon is in tags and is buggy, replace with method: https://stackoverflow.com/questions/8644428/how-to-highlight-text-using-javascript
 	textContainer.innerHTML = textContainer.innerHTML.replaceAll(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
 }
 
-function refreshDictionary() {
-	
-}
-
+//Function to Start Dictionary When Ready
 function prepareDictionary() {
+	//Enable Jargon Button
 	$("#addJargonButton").onclick = () => {
         console.log("clicked")
         if(window.getSelection().toString().length){
 			changeJargon(window.getSelection().toString());
 		}
-		refreshDictionary()
     }
+	
+	//Define All Jargon from Jargon List in Firebase
+	/*jargonList = get jargon List Here
+	
+	for (var word in jargonList) {
+		changeJargon(word)
+	}*/
 }
 
-async function main() {
-	prepareDictionary();
-	
+async function main() {	
     // Get URL
     const urlParam = (new URL(document.location.href)).searchParams.get("url")
 
