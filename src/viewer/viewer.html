@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>LibreJargon</title>
+	<title>LibreJargon</title>
   </head>
   <style>
     html, body {
@@ -27,6 +27,34 @@
     #text-container {
         flex-grow: 1;
     }
+	.jargon {
+		position: relative;
+		display: inline-block;
+	}
+	.jargonWord {
+		background: yellow;
+	}
+	.jargonDefinition {
+		display:none;
+		position: absolute;
+		background: orange;
+		min-width: 500px;
+		z-index: 1;
+	}
+	.jargon:hover .jargonDefinition {
+		display:block;
+	}
+	.jargonButton {
+		position:fixed;
+		opacity: 0.4;
+		right: 20;
+	}
+	.jargonButton:hover {
+		opacity: 1.0;
+	}
+	.jargonSpacer {
+		height:20px
+	}
   </style>
   <body>
     <div id="url-error-container">
@@ -38,7 +66,10 @@
       </label>
     </div>
     <div id="pages-container"></div>
-    <div id="text-container"></div>
+	<button id="addJargonButton" class="jargonButton">Add Selected Text to Jargon List</button>
+    <div id="text-container">
+		<div class="jargonSpacer">&nbsp</div>
+	</div>
     <script type="module" src="viewer.ts"></script>
   </body>
 </html>
