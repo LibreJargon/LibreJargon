@@ -1,7 +1,7 @@
 import { AuthHandler } from "../firebase/firebaseClients"
 import { closeSignInErr, closeSignUpErr, signIntoAccount, signUpForAccount } from "./auth"
 import { addToList, pullReadingList } from './readinglist'
-import { addJargonToList, pullJargonList } from './jargon'
+import { addJargonToList, pullJargon } from './jargon'
 import { getAuth } from "firebase/auth"
 import { DatabaseHandler } from "../firebase/firebaseClients"
 import { renderSuggestions } from "./suggestions"
@@ -32,7 +32,7 @@ getAuth().onAuthStateChanged((user) => {
     document.getElementById('reading-list-div').style.height = "100%"
     self.dbHandler = new DatabaseHandler();
     pullReadingList();
-	pullJargonList();
+	pullJargon();
     renderSuggestions();
     self.rlMap = {}
 

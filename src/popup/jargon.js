@@ -35,7 +35,7 @@ function addJargonToList() {
 }
 
 
-function renderJargonRLItem(title, link, id) {
+function renderJargonRLItem(title, id) {
   var ul = document.getElementById("jargon-list");
   var li = document.createElement("li");
   li.className = "rl-li"
@@ -48,14 +48,13 @@ function renderJargonRLItem(title, link, id) {
     liToDel.style.visibility = "hidden";
     liToDel.style.height = "0px";
     ul.removeAttribute(liToDel)
-    self.dbHandler.rmFromList(self.user.uid, id)
+    self.dbHandler.rmJargonFromList(self.user.uid, id)
 
   });
 
   var titlep = document.createElement("a");
   titlep.appendChild(document.createTextNode(title))
   titlep.title = title;
-  titlep.href = link;
   li.id = id;
   li.appendChild(deleteBtn)
   li.appendChild(titlep)

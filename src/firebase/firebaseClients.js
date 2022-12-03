@@ -3,6 +3,7 @@ import { getFirestore, doc, collection, setDoc, updateDoc, getDoc, addDoc, delet
 import { initializeApp } from 'firebase/app'
 import { firebaseConfig } from './firebaseSecrets'
 import { renderRLItem } from '../popup/readinglist'
+import { renderJargonRLItem } from '../popup/jargon'
 
 const FIREBASE_APP = initializeApp(firebaseConfig)
 
@@ -86,4 +87,27 @@ export class DatabaseHandler {
     return await deleteDoc(doc(this.database, "users", userId, "readinglist", nonce));
   }
 
+  async getJargon(userId) {
+    if(!this.database) {return undefined;}
+    const docs = await getDocs(collection(this.database, "users", userId, "jargonlist"));
+    const fileMap = {}
+    docs.forEach((el) => {
+      fileMap[el.id] = el.data();
+    })
+
+    return fileMap
+  }
+
+  async addToJargonList(listItemObj, userId, nonce) {
+    if(!this.database) {return undefined;}
+    const docInfo = await setDoc(doc(this.database, "users", userId, "jargonlist", nonce), listItemObj)
+    renderJargonRLItem(listItemObj.word, nonce)
+
+    return docInfo;
+  }
+
+  async rmJargonFromList(userId, nonce) {
+    if(!this.database) {return undefined;}
+    return await deleteDoc(doc(this.database, "users", userId, "jargonlist", nonce));
+  }
 }
