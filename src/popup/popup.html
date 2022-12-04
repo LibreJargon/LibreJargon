@@ -38,7 +38,8 @@
     <div class="tab">
       <button class="tablinks" id="rl-tab">Reading List</button>
       <button class="tablinks" id="sugg-tab">Suggestions</button>
-      <button class="tablinks" id="sets-tab">Settings</button>
+      <button class="tablinks" id="jarg-tab">Jargon</button>
+	  <button class="tablinks" id="sets-tab">Settings</button>
     </div>
     <div id="rl" class="tabcontent">
       <h1>Reading List</h1>
@@ -56,6 +57,15 @@
       <div>
         <ul id="suggestion-list" class="rl-list"></ul>
       </div>
+    </div>
+	<div id="jarg" class="tabcontent">
+      <h1>Jargon</h1>
+      <div>
+        <ul id="jargon-list" class="rl-list"></ul>
+      </div>
+      <label for="modify-jargon"><b>Jargon</b></label>
+      <input type="text" name="modify-jargon" id="modify-jargon" required/>
+      <button id="add-jargon-rl">Add to List</button>
     </div>
     <div id="sets" class="tabcontent">
       <h1>Settings</h1>

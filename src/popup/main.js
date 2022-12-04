@@ -1,6 +1,7 @@
 import { AuthHandler } from "../firebase/firebaseClients"
 import { closeSignInErr, closeSignUpErr, signIntoAccount, signUpForAccount } from "./auth"
 import { addToList, pullReadingList } from './readinglist'
+import { addJargonToList, pullJargon } from './jargon'
 import { getAuth } from "firebase/auth"
 import { DatabaseHandler } from "../firebase/firebaseClients"
 import { renderSuggestions } from "./suggestions"
@@ -10,6 +11,7 @@ const browser = require("webextension-polyfill")
 /*
       <button class="tablinks" id="rl-tab">Reading List</button>
       <button class="tablinks" id="sugg-tab">Suggestions</button>
+	  <button class="tablinks" id="jarg-tab">Jargon</button>
       <button class="tablinks" id="sets-tab">Settings</button>
 */
 window.authHandler = new AuthHandler()
@@ -19,6 +21,7 @@ document.getElementById('signup-btn').addEventListener('click', signUpForAccount
 document.getElementById('signupclosebtn').addEventListener('click', closeSignUpErr);
 document.getElementById('signinclosebtn').addEventListener('click', closeSignInErr);
 document.getElementById("add-rl").addEventListener('click', addToList)
+document.getElementById("add-jargon-rl").addEventListener('click', addJargonToList)
 
 getAuth().onAuthStateChanged((user) => {
   if (user) {
@@ -29,6 +32,7 @@ getAuth().onAuthStateChanged((user) => {
     document.getElementById('reading-list-div').style.height = "100%"
     self.dbHandler = new DatabaseHandler();
     pullReadingList();
+	pullJargon();
     renderSuggestions();
     self.rlMap = {}
 
@@ -56,6 +60,7 @@ function openTab(evt, id) {
 
 document.getElementById("rl-tab").addEventListener('click', (e) => openTab(e, "rl"));
 document.getElementById("sets-tab").addEventListener('click', (e) => openTab(e, "sets"));
+document.getElementById("jarg-tab").addEventListener('click', (e) => openTab(e, "jarg"));
 document.getElementById("sugg-tab").addEventListener('click', (e) => openTab(e, "sugg"));
 
 document.getElementById("rl-tab").click();
