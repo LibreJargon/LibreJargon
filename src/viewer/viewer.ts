@@ -1,9 +1,36 @@
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
 import { $, debounce, calculateTextBounds } from "./utils"
 const browser = require("webextension-polyfill")
-
 import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
 import type { TextItem } from "pdfjs-dist/types/src/display/api"
+
+import { AuthHandler } from "../firebase/firebaseClients"
+import { getAuth } from "firebase/auth"
+import { DatabaseHandler } from "../firebase/firebaseClients"
+
+window.authHandler = new AuthHandler()
+
+getAuth().onAuthStateChanged((user) => {
+  //TODO: Race Condition Here where code assumes that text container is filled before auth state changes, may fail for large pdfs
+	//For now, program runs twice, but due to current implementation may double highlight words, moreso problem with TODO in how we highlight words
+  if (user) {
+    self.user = user
+    self.dbHandler = new DatabaseHandler()
+	//Define All Jargon from Jargon List in Firebase	
+	self.dbHandler.getJargon(user.uid).then(
+      (jargon) => {
+		var newJargonList = {}
+        for (var i of Object.keys(jargon)) {
+		  changeJargon(jargon[i].word)
+		  newJargonList[i] = jargon[i].word
+        }
+		self.jargonList = newJargonList
+      })
+  }
+  else {
+	self.jargonList = {}
+  }
+});
 
 browser.tabs.getCurrent().then((tab: any) => {
   browser.browserAction.setPopup({
@@ -11,7 +38,6 @@ browser.tabs.getCurrent().then((tab: any) => {
     tabId: tab.id
   })
 })
-
 
 GlobalWorkerOptions.workerPort = new Worker(
     new URL("/node_modules/pdfjs-dist/build/pdf.worker.js", import.meta.url),
@@ -179,6 +205,15 @@ function showUrlError(message: string) {
 
 //Find the definition for a word and insert it
 function changeJargon(word) {
+	if (word.split()[0].length != 0) {
+		word = word.split()[0]
+	}
+	else if (word.split().size() < 2) {
+		return
+	}
+	else {
+		word = word.split()[1]
+	}
 	var url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exchars=1200&exlimit=1&exintro&explaintext&format=json&titles=" + word
 	fetch(url)
 	.then((response) => response.json())
@@ -212,21 +247,17 @@ function prepareDictionary() {
 		}
     }
 	
-	//Define All Jargon from Jargon List in Firebase
-	/*jargonList = get jargon List Here
-	
-	for (var word in jargonList) {
-		changeJargon(word)
-	}*/
-	console.log("attempt")
-	console.log(self.rlMap[0])
+	for (var i in self.jargonList) {
+		changeJargon(jargonList[i])
+	}
 }
 
 async function main() {	
     // Get URL
     const urlParam = (new URL(document.location.href)).searchParams.get("url")
 
-    if (!urlParam) {
+	//Check that a PDF was passed in with Regex
+    if (!/^.*:\/\/.*\/.*.pdf$/.test(urlParam)) {
         return showUrlError("No PDF provided")
     }
 
