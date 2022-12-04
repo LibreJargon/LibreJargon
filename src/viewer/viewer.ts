@@ -1,9 +1,36 @@
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
 import { $, debounce, calculateTextBounds } from "./utils"
 const browser = require("webextension-polyfill")
-
 import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
 import type { TextItem } from "pdfjs-dist/types/src/display/api"
+
+import { AuthHandler } from "../firebase/firebaseClients"
+import { getAuth } from "firebase/auth"
+import { DatabaseHandler } from "../firebase/firebaseClients"
+
+window.authHandler = new AuthHandler()
+
+getAuth().onAuthStateChanged((user) => {
+  //TODO: Race Condition Here where code assumes that text container is filled before auth state changes, may fail for large pdfs
+	//For now, program runs twice, but due to current implementation may double highlight words, moreso problem with TODO in how we highlight words
+  if (user) {
+    self.user = user
+    self.dbHandler = new DatabaseHandler()
+	//Define All Jargon from Jargon List in Firebase	
+	self.dbHandler.getJargon(user.uid).then(
+      (jargon) => {
+		var newJargonList = {}
+        for (var i of Object.keys(jargon)) {
+		  changeJargon(jargon[i].word)
+		  newJargonList[i] = jargon[i].word
+        }
+		self.jargonList = newJargonList
+      })
+  }
+  else {
+	self.jargonList = {}
+  }
+});
 
 browser.tabs.getCurrent().then((tab: any) => {
   browser.browserAction.setPopup({
@@ -12,7 +39,6 @@ browser.tabs.getCurrent().then((tab: any) => {
   })
 })
 
-
 GlobalWorkerOptions.workerPort = new Worker(
     new URL("/node_modules/pdfjs-dist/build/pdf.worker.js", import.meta.url),
     {type: "module"}
@@ -20,6 +46,7 @@ GlobalWorkerOptions.workerPort = new Worker(
 
 const pagesContainer = $("#pages-container")
 const textContainer = $("#text-container")
+
 async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]> {
     let pages: HTMLElement[] = []
     for (let i = 1; i <= pdf.numPages; ++i) {
@@ -38,6 +65,7 @@ async function initPageContainers(pdf: PDFDocumentProxy): Promise<HTMLElement[]>
         textContainer.appendChild(textDiv)
         loadTextContainer(page, textDiv)
     }
+	prepareDictionary();
     return pages
 }
 
@@ -175,45 +203,61 @@ function showUrlError(message: string) {
     }
 }
 
+//Find the definition for a word and insert it
 function changeJargon(word) {
+	if (word.split()[0].length != 0) {
+		word = word.split()[0]
+	}
+	else if (word.split().size() < 2) {
+		return
+	}
+	else {
+		word = word.split()[1]
+	}
 	var url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exchars=1200&exlimit=1&exintro&explaintext&format=json&titles=" + word
 	fetch(url)
 	.then((response) => response.json())
 	.then((data) => parseJSONJargon(word, data))
 }
 
-//In the current implementation, this replaces the innerHTML of the entire textcontainer, which replaces event listeners and such, may need to be changed.
+//Process the json definition and insert it
 function parseJSONJargon(word, json) {
 	var pages = json.query.pages
 	var definition
 	for (var key in pages) {
 		definition = pages[key].extract
+		break
 	}
 	
+	insertJargon(word, definition)
+}
+
+//Insert the Jargon into the HTML for UI
+function insertJargon(word, definition) {
+	//TODO: This will break if jargon is in tags and is buggy, replace with method: https://stackoverflow.com/questions/8644428/how-to-highlight-text-using-javascript
 	textContainer.innerHTML = textContainer.innerHTML.replaceAll(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
 }
 
-function refreshDictionary() {
-	
-}
-
+//Function to Start Dictionary When Ready
 function prepareDictionary() {
+	//Enable Jargon Button
 	$("#addJargonButton").onclick = () => {
-        console.log("clicked")
         if(window.getSelection().toString().length){
 			changeJargon(window.getSelection().toString());
 		}
-		refreshDictionary()
     }
+	
+	for (var i in self.jargonList) {
+		changeJargon(jargonList[i])
+	}
 }
 
-async function main() {
-	prepareDictionary();
-	
+async function main() {	
     // Get URL
     const urlParam = (new URL(document.location.href)).searchParams.get("url")
 
-    if (!urlParam) {
+	//Check that a PDF was passed in with Regex
+    if (!/^.*:\/\/.*\/.*.pdf$/.test(urlParam)) {
         return showUrlError("No PDF provided")
     }
 
