@@ -53,13 +53,6 @@ export class DatabaseHandler {
     this.database = getFirestore(FIREBASE_APP);
   }
 
-  async setUser(userId) {
-    if(!this.database) {return undefined;}
-    return await updateDoc(doc(this.database, "users", userId), {
-      uid: userId
-    });
-  }
-
 
   async getReadingList(userId) {
     if(!this.database) {return undefined;}
@@ -107,5 +100,36 @@ export class DatabaseHandler {
   async rmJargonFromList(userId, nonce) {
     if(!this.database) {return undefined;}
     return await deleteDoc(doc(this.database, "users", userId, "jargonlist", nonce));
+  }
+  
+  async getSettings(userId) {
+    if(!this.database) {return undefined;}
+    const docs = await getDocs(collection(this.database, "users", userId, "settingsList"));
+    const fileMap = {}
+    docs.forEach((el) => {
+      fileMap[el.id] = el.data();
+    })
+
+    return fileMap
+  }
+  
+  async changeSetting(userId, nonce, listItemObj) {
+    if(!this.database) {return undefined;}
+    const docInfo = await setDoc(doc(this.database, "users", userId, "settingsList", nonce), listItemObj)
+
+    return docInfo;
+  }
+  
+  async addToSettingsList(listItemObj, userId, nonce) {
+    if(!this.database) {return undefined;}
+    const docInfo = await setDoc(doc(this.database, "users", userId, "settingsList", nonce), listItemObj)
+    renderSettingsItem(listItemObj.name, listItemObj.value, nonce)
+
+    return docInfo;
+  }
+  
+  async rmSettingFromList(userId, nonce) {
+    if(!this.database) {return undefined;}
+    return await deleteDoc(doc(this.database, "users", userId, "settingsList", nonce));
   }
 }
