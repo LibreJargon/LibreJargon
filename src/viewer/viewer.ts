@@ -7,8 +7,12 @@ import type { TextItem } from "pdfjs-dist/types/src/display/api"
 import { AuthHandler } from "../firebase/firebaseClients"
 import { getAuth } from "firebase/auth"
 import { DatabaseHandler } from "../firebase/firebaseClients"
+import { settings } from "../popup/settings"
 
 window.authHandler = new AuthHandler()
+
+self.settings = settings
+self.jargonList = []
 
 getAuth().onAuthStateChanged((user) => {
   //TODO: Race Condition Here where code assumes that text container is filled before auth state changes, may fail for large pdfs
@@ -16,6 +20,19 @@ getAuth().onAuthStateChanged((user) => {
   if (user) {
     self.user = user
     self.dbHandler = new DatabaseHandler()
+	
+	//Get Settings List
+	self.dbHandler.getSettings(user.uid).then(
+      (settingsList) => {
+	    var counter = 0;
+        for (var i of Object.keys(settingsList)) {
+		  if (settingsList[i].name == self.settings[counter][0]) {
+			self.settings[counter][1] = settingsList[i].value
+		  }
+		  counter++;
+        }
+      })
+	
 	//Define All Jargon from Jargon List in Firebase	
 	self.dbHandler.getJargon(user.uid).then(
       (jargon) => {
@@ -28,7 +45,8 @@ getAuth().onAuthStateChanged((user) => {
       })
   }
   else {
-	self.jargonList = {}
+	self.settings = settings
+	self.jargonList = []
   }
 });
 
@@ -235,7 +253,13 @@ function parseJSONJargon(word, json) {
 //Insert the Jargon into the HTML for UI
 function insertJargon(word, definition) {
 	//TODO: This will break if jargon is in tags and is buggy, replace with method: https://stackoverflow.com/questions/8644428/how-to-highlight-text-using-javascript
-	textContainer.innerHTML = textContainer.innerHTML.replaceAll(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
+	//TODO: probably shouldn't hard code this for settings
+	if (self.settings[0][1] == true) {
+		textContainer.innerHTML = textContainer.innerHTML.replaceAll(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
+	}
+	else {
+		textContainer.innerHTML = textContainer.innerHTML.replace(word, "<div class=jargon><div class=jargonWord>" + word + "</div><div class=jargonDefinition>" + definition + "</div></div>")
+	}
 }
 
 //Function to Start Dictionary When Ready
