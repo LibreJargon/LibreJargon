@@ -2,6 +2,7 @@ import { AuthHandler } from "../firebase/firebaseClients"
 import { closeSignInErr, closeSignUpErr, signIntoAccount, signUpForAccount } from "./auth"
 import { addToList, pullReadingList } from './readinglist'
 import { addJargonToList, pullJargon } from './jargon'
+import { pullSettingsList } from './settings'
 import { getAuth } from "firebase/auth"
 import { DatabaseHandler } from "../firebase/firebaseClients"
 import { renderSuggestions } from "./suggestions"
@@ -34,6 +35,7 @@ getAuth().onAuthStateChanged((user) => {
     self.dbHandler.setUser(user.uid)
     pullReadingList();
 	pullJargon();
+	pullSettingsList();
     renderSuggestions();
     self.rlMap = {}
 
