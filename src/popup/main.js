@@ -31,6 +31,7 @@ getAuth().onAuthStateChanged((user) => {
     document.getElementById('reading-list-div').style.visibility = "visible"
     document.getElementById('reading-list-div').style.height = "100%"
     self.dbHandler = new DatabaseHandler();
+    self.dbHandler.setUser(user.uid)
     pullReadingList();
 	pullJargon();
     renderSuggestions();
