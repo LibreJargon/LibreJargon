@@ -53,12 +53,7 @@ export class DatabaseHandler {
     this.database = getFirestore(FIREBASE_APP);
   }
 
-  async setUser(userId) {
-    if(!this.database) {return undefined;}
-    return await updateDoc(doc(this.database, "users", userId), {
-      uid: userId
-    });
-  }
+
 
 
   async getReadingList(userId) {
