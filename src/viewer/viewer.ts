@@ -4,9 +4,8 @@ const browser = require("webextension-polyfill");
 import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist";
 import type { TextItem } from "pdfjs-dist/types/src/display/api";
 
-import { AuthHandler } from "../firebase/firebaseClients";
+import { AuthHandler, DatabaseHandler } from "../firebase/firebaseClients";
 import { getAuth } from "firebase/auth";
-import { DatabaseHandler } from "../firebase/firebaseClients";
 import { settings } from "../popup/settings";
 
 window.authHandler = new AuthHandler();
@@ -23,8 +22,8 @@ getAuth().onAuthStateChanged((user) => {
 
     //Get Settings List
     self.dbHandler.getSettings(user.uid).then((settingsList) => {
-      var counter = 0;
-      for (var i of Object.keys(settingsList)) {
+      let counter = 0;
+      for (const i of Object.keys(settingsList)) {
         if (settingsList[i].name == self.settings[counter][0]) {
           self.settings[counter][1] = settingsList[i].value;
         }
@@ -34,8 +33,8 @@ getAuth().onAuthStateChanged((user) => {
 
     //Define All Jargon from Jargon List in Firebase
     self.dbHandler.getJargon(user.uid).then((jargon) => {
-      var newJargonList = {};
-      for (var i of Object.keys(jargon)) {
+      const newJargonList = {};
+      for (let i of Object.keys(jargon)) {
         changeJargon(jargon[i].word);
         newJargonList[i] = jargon[i].word;
       }
@@ -94,7 +93,7 @@ async function loadTextContainer(page: PDFPageProxy, container: HTMLElement) {
   let segments: string[] = [];
 
   for (const item of <TextItem[]>text.items) {
-    const [left, lower, right, upper] = calculateTextBounds(item, text);
+    const [left, lower, upper] = calculateTextBounds(item, text);
     if (isNaN(left)) {
       continue;
     }
@@ -164,7 +163,7 @@ async function loadVisiblePages(
 
   // Unload unneeded pages
   for (const pageIdx of pagesLoaded.keys()) {
-    if (!pagesToLoad.has(pageIdx) && pagesLoaded.get(pageIdx) === true) {
+    if (!pagesToLoad.has(pageIdx)) {
       pagesLoaded.delete(pageIdx);
       pages[pageIdx].replaceChildren();
     }
@@ -173,7 +172,7 @@ async function loadVisiblePages(
   // Loop through unloaded pages
   for (const pageIdx of pagesToLoad) {
     if (!pagesLoaded.has(pageIdx)) {
-      const promise = pdf.getPage(pageIdx + 1).then(async (page) => {
+      pdf.getPage(pageIdx + 1).then(async (page) => {
         const viewport = page.getViewport({ scale: 1 });
 
         const canvas = document.createElement("canvas");
@@ -237,7 +236,7 @@ function changeJargon(word) {
   } else {
     word = word.split()[1];
   }
-  var url =
+  const url =
     "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exchars=1200&exlimit=1&exintro&explaintext&format=json&titles=" +
     word;
   fetch(url)
@@ -247,9 +246,9 @@ function changeJargon(word) {
 
 //Process the json definition and insert it
 function parseJSONJargon(word, json) {
-  var pages = json.query.pages;
-  var definition;
-  for (var key in pages) {
+  const pages = json.query.pages;
+  let definition;
+  for (const key in pages) {
     definition = pages[key].extract;
     break;
   }
@@ -261,7 +260,7 @@ function parseJSONJargon(word, json) {
 function insertJargon(word, definition) {
   //TODO: This will break if jargon is in tags and is buggy, replace with method: https://stackoverflow.com/questions/8644428/how-to-highlight-text-using-javascript
   //TODO: probably shouldn't hard code this for settings
-  if (self.settings[0][1] == true) {
+  if (self.settings[0][1]) {
     textContainer.innerHTML = textContainer.innerHTML.replaceAll(
       word,
       "<div class=jargon><div class=jargonWord>" +
@@ -291,8 +290,8 @@ function prepareDictionary() {
     }
   };
 
-  for (var i in self.jargonList) {
-    changeJargon(jargonList[i]);
+  for (const i in self.jargonList) {
+    changeJargon(self.jargonList[i]);
   }
 }
 
@@ -312,7 +311,7 @@ async function main() {
   }
 
   // Load PDF
-  const pdf = await getDocument(unescape(urlParam)).promise;
+  const pdf = await getDocument(decodeURI(urlParam)).promise;
   const pages = await initPageContainers(pdf);
   const pagesLoaded = new Map();
   await loadVisiblePages(pdf, pages, pagesLoaded);

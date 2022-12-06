@@ -2,8 +2,8 @@ import { describe, expect, test } from "@jest/globals";
 import { DatabaseHandler, AuthHandler } from "../firebaseClients";
 import { getAuth } from "firebase/auth";
 
-var db = new DatabaseHandler();
-var auth = new AuthHandler();
+let db = new DatabaseHandler();
+let auth = new AuthHandler();
 const testEmail = "test@test.com";
 const testPassword = "test123";
 

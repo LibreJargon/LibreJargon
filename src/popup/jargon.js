@@ -1,12 +1,10 @@
-import { DatabaseHandler } from "../firebase/firebaseClients";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { nonce } from "./utils";
 
 function pullJargon() {
   if (self.user) {
     const uid = self.user.uid;
     self.dbHandler.getJargon(uid).then((jargon) => {
-      for (var i of Object.keys(jargon)) {
+      for (let i of Object.keys(jargon)) {
         renderJargonRLItem(jargon[i].word, i);
         self.rlMap[i] = jargon[i];
       }
@@ -15,7 +13,7 @@ function pullJargon() {
 }
 
 function addJargonToList() {
-  var word = document.getElementById("modify-jargon").value;
+  let word = document.getElementById("modify-jargon").value;
   // TODO send to firestore at /users/{id}/userlist
   document.getElementById("modify-jargon").value = "";
 
@@ -32,10 +30,10 @@ function addJargonToList() {
 }
 
 function renderJargonRLItem(title, id) {
-  var ul = document.getElementById("jargon-list");
-  var li = document.createElement("li");
+  let ul = document.getElementById("jargon-list");
+  let li = document.createElement("li");
   li.className = "rl-li";
-  var deleteBtn = document.createElement("button");
+  let deleteBtn = document.createElement("button");
   deleteBtn.className = "icons";
   deleteBtn.textContent = "X";
 
@@ -47,7 +45,7 @@ function renderJargonRLItem(title, id) {
     self.dbHandler.rmJargonFromList(self.user.uid, id);
   });
 
-  var titlep = document.createElement("a");
+  let titlep = document.createElement("a");
   titlep.appendChild(document.createTextNode(title));
   titlep.title = title;
   li.id = id;

@@ -9,9 +9,6 @@ import {
   doc,
   collection,
   setDoc,
-  updateDoc,
-  getDoc,
-  addDoc,
   deleteDoc,
   getDocs,
 } from "firebase/firestore";
