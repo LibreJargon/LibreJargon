@@ -10,7 +10,7 @@ jobs:
       - run:
           command: npm run build && npm run ext
           name: Run build
-      - test:
+      - run:
           command: npm run test
           name: Run tests
       - sonarcloud/scan
