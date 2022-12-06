@@ -1,6 +1,6 @@
 import { nonce } from "./utils";
 
-const arxiv = require('arxiv-api');
+// const arxiv = require('arxiv-api');
 
 function renderSuggestions() {
   arxiv

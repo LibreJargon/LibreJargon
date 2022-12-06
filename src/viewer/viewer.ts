@@ -34,7 +34,7 @@ getAuth().onAuthStateChanged((user) => {
     //Define All Jargon from Jargon List in Firebase
     self.dbHandler.getJargon(user.uid).then((jargon) => {
       const newJargonList = {};
-      for (const i of Object.keys(jargon)) {
+      for (let i of Object.keys(jargon)) {
         changeJargon(jargon[i].word);
         newJargonList[i] = jargon[i].word;
       }
