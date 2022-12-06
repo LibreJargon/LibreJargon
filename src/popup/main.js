@@ -64,7 +64,7 @@ function openTab(evt, id) {
     tab.style.display = "none";
   }
   let tablinks = document.getElementsByClassName("tablinks");
-  for (let tab of tabcontent) {
+  for (let tab of tablinks) {
     tab.className = tab.className.replace(" active", "");
   }
   document.getElementById(id).style.display = "block";
