@@ -1,4 +1,4 @@
-export function nonce(length) {
+function nonce(length) {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   for(var i = 0; i < length; i++) {
@@ -6,3 +6,6 @@ export function nonce(length) {
   }
   return text;
 }
+
+
+export { nonce }
