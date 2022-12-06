@@ -6,8 +6,11 @@ jobs:
       - image: cimg/base:2021.04
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
+      - node/install
+      - node/install-npm
+      -run:
+          name: Install all packages
+          command: npm install
       - run:
           name: Run Tests
           command: npm run test  
