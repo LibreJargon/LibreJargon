@@ -45,7 +45,7 @@ function renderSettingsItem(name, value, id) {
   let changeBtn = document.createElement("button");
   changeBtn.className = "icons";
 
-  if (value == true) {
+  if (value && value == true) {
     changeBtn.textContent = "\u2713";
   } else {
     changeBtn.textContent = "X";
