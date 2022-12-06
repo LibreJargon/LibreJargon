@@ -5,7 +5,7 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - node/install-packages
+      - node/install-packages:
           pkg-manager: npm
       - run:
           command: npm run build && npm run ext
