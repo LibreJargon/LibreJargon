@@ -1,5 +1,3 @@
-import { DatabaseHandler } from "../firebase/firebaseClients";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { nonce } from "./utils";
 
 //Default Settings Here that Also Determines Setting Structure
@@ -41,13 +39,13 @@ function pullSettingsList() {
 }
 
 function renderSettingsItem(name, value, id) {
-  var ul = document.getElementById("settings-list");
-  var li = document.createElement("li");
+  let ul = document.getElementById("settings-list");
+  let li = document.createElement("li");
   li.className = "rl-li";
-  var changeBtn = document.createElement("button");
+  let changeBtn = document.createElement("button");
   changeBtn.className = "icons";
 
-  if (value == true) {
+  if (value) {
     changeBtn.textContent = "\u2713";
   } else {
     changeBtn.textContent = "X";
@@ -56,10 +54,10 @@ function renderSettingsItem(name, value, id) {
   changeBtn.addEventListener("click", () => {
     const liToChange = document.getElementById(id);
 
-    var changeBtn = liToChange.childNodes[0];
-    var title = liToChange.childNodes[1].title;
+    let changeBtn = liToChange.childNodes[0];
+    let title = liToChange.childNodes[1].title;
 
-    var value;
+    let value;
     if (changeBtn.textContent == "X") {
       changeBtn.textContent = "\u2713";
       value = true;
@@ -74,7 +72,7 @@ function renderSettingsItem(name, value, id) {
     self.dbHandler.changeSetting(self.user.uid, id, file);
   });
 
-  var titlep = document.createElement("a");
+  let titlep = document.createElement("a");
   titlep.appendChild(document.createTextNode(name));
   titlep.title = name;
   li.id = id;

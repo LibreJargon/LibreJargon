@@ -3,8 +3,7 @@ function signIntoAccount() {
   const pwd = document.getElementById("sipwd").value;
   const errormsg = document.getElementById("signinerror");
   window.authHandler.signIn(eml, pwd).then((res) => {
-    if (res) {
-    } else {
+    if (!res) {
       errormsg.style.visibility = "visible";
     }
   });
@@ -22,13 +21,11 @@ function signUpForAccount() {
     return;
   } else {
     window.authHandler.registerUser(eml, pwd).then((res) => {
-      if (res !== "error") {
-      } else {
+      if (res === "error") {
         errormsg.style.visibility = "visible";
       }
     });
   }
-  return;
 }
 
 function closeSignUpErr() {

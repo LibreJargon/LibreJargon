@@ -1,6 +1,6 @@
 import { nonce } from "./utils";
 
-// const arxiv = require('arxiv-api');
+const arxiv = require('arxiv-api');
 
 function renderSuggestions() {
   arxiv
@@ -14,7 +14,7 @@ function renderSuggestions() {
       maxResults: 5,
     })
     .then((res) => {
-      for (var paper of res) {
+      for (const paper of res) {
         renderRLItem(paper.title, paper.id, nonce(10));
       }
     })
@@ -24,10 +24,10 @@ function renderSuggestions() {
 }
 
 function renderRLItem(title, link, id) {
-  var ul = document.getElementById("suggestion-list");
-  var li = document.createElement("li");
+  let ul = document.getElementById("suggestion-list");
+  let li = document.createElement("li");
   li.className = "rl-li";
-  var addBtn = document.createElement("button");
+  let addBtn = document.createElement("button");
   addBtn.className = "icons";
   addBtn.textContent = "+";
 
@@ -46,7 +46,7 @@ function renderRLItem(title, link, id) {
     );
   });
 
-  var titlep = document.createElement("a");
+  let titlep = document.createElement("a");
   titlep.appendChild(document.createTextNode(title));
   titlep.title = title;
   titlep.href = link;

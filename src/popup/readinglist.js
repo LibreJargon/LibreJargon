@@ -1,12 +1,10 @@
-import { DatabaseHandler } from "../firebase/firebaseClients";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { nonce } from "./utils";
 
 function pullReadingList() {
   if (self.user) {
     const uid = self.user.uid;
     self.dbHandler.getReadingList(uid).then((readingList) => {
-      for (var i of Object.keys(readingList)) {
+      for (let i of Object.keys(readingList)) {
         renderRLItem(readingList[i].title, readingList[i].link, i);
         self.rlMap[i] = readingList[i];
       }
@@ -15,8 +13,8 @@ function pullReadingList() {
 }
 
 function addToList() {
-  var title = document.getElementById("add-title").value;
-  var link = document.getElementById("add-link").value;
+  let title = document.getElementById("add-title").value;
+  let link = document.getElementById("add-link").value;
   // TODO send to firestore at /users/{id}/userlist
   document.getElementById("add-link").value = "";
   document.getElementById("add-title").value = "";
@@ -35,10 +33,10 @@ function addToList() {
 }
 
 function renderRLItem(title, link, id) {
-  var ul = document.getElementById("reader-list");
-  var li = document.createElement("li");
+  let ul = document.getElementById("reader-list");
+  let li = document.createElement("li");
   li.className = "rl-li";
-  var deleteBtn = document.createElement("button");
+  let deleteBtn = document.createElement("button");
   deleteBtn.className = "icons";
   deleteBtn.textContent = "X";
 
@@ -50,7 +48,7 @@ function renderRLItem(title, link, id) {
     self.dbHandler.rmFromList(self.user.uid, id);
   });
 
-  var titlep = document.createElement("a");
+  let titlep = document.createElement("a");
   titlep.appendChild(document.createTextNode(title));
   titlep.title = title;
   titlep.href = link;
