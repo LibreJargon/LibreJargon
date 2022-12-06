@@ -260,7 +260,7 @@ function parseJSONJargon(word, json) {
 function insertJargon(word, definition) {
   //TODO: This will break if jargon is in tags and is buggy, replace with method: https://stackoverflow.com/questions/8644428/how-to-highlight-text-using-javascript
   //TODO: probably shouldn't hard code this for settings
-  if (self.settings[0][1] && self.settings[0][1]==true) {
+  if (self.settings[0][1]) {
     textContainer.innerHTML = textContainer.innerHTML.replaceAll(
       word,
       "<div class=jargon><div class=jargonWord>" +
