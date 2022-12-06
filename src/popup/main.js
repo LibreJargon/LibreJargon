@@ -1,4 +1,4 @@
-import { AuthHandler } from "../firebase/firebaseClients";
+import { AuthHandler, DatabaseHandler } from "../firebase/firebaseClients";
 import {
   closeSignInErr,
   closeSignUpErr,
@@ -9,7 +9,6 @@ import { addToList, pullReadingList } from "./readinglist";
 import { addJargonToList, pullJargon } from "./jargon";
 import { pullSettingsList } from "./settings";
 import { getAuth } from "firebase/auth";
-import { DatabaseHandler } from "../firebase/firebaseClients";
 import { renderSuggestions } from "./suggestions";
 
 // Handle Auth
@@ -60,13 +59,13 @@ getAuth().onAuthStateChanged((user) => {
 });
 
 function openTab(evt, id) {
-  var tabcontent = document.getElementsByClassName("tabcontent");
-  for (var i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
+  let tabcontent = document.getElementsByClassName("tabcontent");
+  for (let tab of tabcontent) {
+    tab.style.display = "none";
   }
-  var tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  let tablinks = document.getElementsByClassName("tablinks");
+  for (let tab of tabcontent) {
+    tab.className = tab.className.replace(" active", "");
   }
   document.getElementById(id).style.display = "block";
   evt.currentTarget.className += " active";
