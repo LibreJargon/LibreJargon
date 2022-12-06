@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 .alert {
   /* height: 0px; */
   background-color: #f44336;
   color: white;
-  visibility:hidden;
+  visibility: hidden;
 }
 
 .closebtn {
@@ -29,7 +29,7 @@ body {
 }
 
 .auth-div {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -42,8 +42,8 @@ body {
 }
 
 .rl-div {
-  font-family: 'Roboto', sans-serif;
-  visibility:hidden;
+  font-family: "Roboto", sans-serif;
+  visibility: hidden;
   display: flex;
   flex-direction: column;
   height: 0;
@@ -72,17 +72,14 @@ body {
 .icons {
   width: 20px;
   height: 20px;
-  border:none;
+  border: none;
   background-color: white;
   border-radius: 0px;
 }
 
-
 input {
   width: 100%;
 }
-
-
 
 .tab {
   overflow: hidden;

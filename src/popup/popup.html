@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <title>LibreJargon</title>
-    <link rel="stylesheet" href="popup.css">
-    <script type="module" src="main.js"/>
+    <link rel="stylesheet" href="popup.css" />
+    <script type="module" src="main.js" />
   </head>
   <div id="auth-div" class="auth-div">
     <h1>Welcome to LibreJargon</h1>
@@ -14,9 +14,21 @@
     </div>
     <form class="auth-form">
       <label for="eml"><b>Email</b></label>
-      <input type="email" placeholder="Enter Email" name="eml" id="sieml" required/>
+      <input
+        type="email"
+        placeholder="Enter Email"
+        name="eml"
+        id="sieml"
+        required
+      />
       <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" id="sipwd" required/>
+      <input
+        type="password"
+        placeholder="Enter Password"
+        name="psw"
+        id="sipwd"
+        required
+      />
     </form>
     <button id="signin-btn" class="auth-btn">Sign In</button>
     <h2>Or Sign Up</h2>
@@ -26,11 +38,29 @@
     </div>
     <form class="auth-form">
       <label for="regeml"><b>Email</b></label>
-      <input type="email" placeholder="Enter Email" name="regeml" id="sueml" required/>
+      <input
+        type="email"
+        placeholder="Enter Email"
+        name="regeml"
+        id="sueml"
+        required
+      />
       <label for="regpsw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="regpsw" id="signuppwd" required/>
+      <input
+        type="password"
+        placeholder="Enter Password"
+        name="regpsw"
+        id="signuppwd"
+        required
+      />
       <label for="coregpsw"><b>Confirm Password</b></label>
-      <input type="password" placeholder="Re-enter Password" name="coregpsw" id="confirmsignuppwd" required/>
+      <input
+        type="password"
+        placeholder="Re-enter Password"
+        name="coregpsw"
+        id="confirmsignuppwd"
+        required
+      />
     </form>
     <button id="signup-btn" class="auth-btn">Sign Up</button>
   </div>
@@ -39,7 +69,7 @@
       <button class="tablinks" id="rl-tab">Reading List</button>
       <button class="tablinks" id="sugg-tab">Suggestions</button>
       <button class="tablinks" id="jarg-tab">Jargon</button>
-	  <button class="tablinks" id="sets-tab">Settings</button>
+      <button class="tablinks" id="sets-tab">Settings</button>
     </div>
     <div id="rl" class="tabcontent">
       <h1>Reading List</h1>
@@ -47,9 +77,9 @@
         <ul id="reader-list" class="rl-list"></ul>
       </div>
       <label for="add-title"><b>Title</b></label>
-      <input type="text" name="add-title" id="add-title" required/>
+      <input type="text" name="add-title" id="add-title" required />
       <label for="add-link"><b>Link</b></label>
-      <input type="text" name="add-link" id="add-link" required/>
+      <input type="text" name="add-link" id="add-link" required />
       <button id="add-rl">Add to List</button>
     </div>
     <div id="sugg" class="tabcontent">
@@ -58,13 +88,13 @@
         <ul id="suggestion-list" class="rl-list"></ul>
       </div>
     </div>
-	<div id="jarg" class="tabcontent">
+    <div id="jarg" class="tabcontent">
       <h1>Jargon</h1>
       <div>
         <ul id="jargon-list" class="rl-list"></ul>
       </div>
       <label for="modify-jargon"><b>Jargon</b></label>
-      <input type="text" name="modify-jargon" id="modify-jargon" required/>
+      <input type="text" name="modify-jargon" id="modify-jargon" required />
       <button id="add-jargon-rl">Add to List</button>
     </div>
     <div id="sets" class="tabcontent">
