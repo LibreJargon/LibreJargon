@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies and build project
-          command: echo "This is a test build job."
+          command: npm run build
       - sonarcloud/scan
 
 orbs:
