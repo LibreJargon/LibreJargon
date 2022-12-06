@@ -1,37 +1,34 @@
 function signIntoAccount() {
-  const eml = document.getElementById("sieml").value
-  const pwd = document.getElementById("sipwd").value
+  const eml = document.getElementById("sieml").value;
+  const pwd = document.getElementById("sipwd").value;
   const errormsg = document.getElementById("signinerror");
   window.authHandler.signIn(eml, pwd).then((res) => {
-    if(res) {
-
+    if (res) {
     } else {
-      errormsg.style.visibility = "visible"
+      errormsg.style.visibility = "visible";
     }
-  })
+  });
 }
 
 function signUpForAccount() {
-  const eml = document.getElementById("sueml").value
-  const pwd = document.getElementById("signuppwd").value
-  const copwd = document.getElementById("confirmsignuppwd").value
+  const eml = document.getElementById("sueml").value;
+  const pwd = document.getElementById("signuppwd").value;
+  const copwd = document.getElementById("confirmsignuppwd").value;
 
   const errormsg = document.getElementById("signuperror");
 
-  if(pwd !== copwd) {
-    errormsg.style.visibility = "visible"
+  if (pwd !== copwd) {
+    errormsg.style.visibility = "visible";
     return;
-  }
-  else {
+  } else {
     window.authHandler.registerUser(eml, pwd).then((res) => {
-      if(res !== "error") {
-
+      if (res !== "error") {
       } else {
-        errormsg.style.visibility = "visible"
+        errormsg.style.visibility = "visible";
       }
-    })
+    });
   }
-  return
+  return;
 }
 
 function closeSignUpErr() {
@@ -44,5 +41,4 @@ function closeSignInErr() {
   document.getElementById("signinerror").style.height = "0px";
 }
 
-
-export { closeSignInErr, closeSignUpErr, signIntoAccount, signUpForAccount }
+export { closeSignInErr, closeSignUpErr, signIntoAccount, signUpForAccount };

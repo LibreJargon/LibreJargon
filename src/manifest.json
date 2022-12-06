@@ -3,12 +3,9 @@
   "name": "LibreJargon",
   "version": "0.0.1",
   "background": {
-      "scripts": ["background.js"]
+    "scripts": ["background.js"]
   },
   "permissions": ["tabs", "*://*/*.pdf"],
   "browser_action": {},
-  "web_accessible_resources": [
-      "viewer/viewer.html",
-      "popup/popup.html"
-  ]
+  "web_accessible_resources": ["viewer/viewer.html", "popup/popup.html"]
 }

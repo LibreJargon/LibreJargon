@@ -1,29 +1,41 @@
 {
   "name": "LibreJargon",
   "dependencies": {
-      "arxiv-api": "^1.1.1",
-      "pdfjs-dist": "2.16.105"
+    "babel-jest": "^29.3.1",
+    "pdfjs-dist": "2.16.105",
+    "ts-jest": "^29.0.3"
   },
   "devDependencies": {
-      "@parcel/config-webextension": "^2.7.0",
-      "firebase": "^9.12.1",
-      "parcel": "^2.7.0",
-      "stream-browserify": "^3.0.0",
-      "timers-browserify": "^2.0.12",
-      "typescript": "4.8.4",
-      "util": "^0.12.5",
-      "web-ext": "7.3.0",
-      "webextension-polyfill": "^0.10.0",
-      "axios": ">=0.21.2",
-      "follow-redirects": ">=1.14.8",
-      "lodash": ">=4.17.21"
-
-
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-typescript": "^7.18.6",
+    "@jest/globals": "^29.3.1",
+    "@parcel/config-webextension": "^2.7.0",
+    "axios": ">=0.21.2",
+    "firebase": "^9.12.1",
+    "follow-redirects": ">=1.14.8",
+    "jest": "^29.3.1",
+    "lodash": ">=4.17.21",
+    "parcel": "^2.7.0",
+    "prettier": "2.8.0",
+    "stream-browserify": "^3.0.0",
+    "timers-browserify": "^2.0.12",
+    "typescript": "4.8.4",
+    "util": "^0.12.5",
+    "web-ext": "7.3.0",
+    "webextension-polyfill": "^0.10.0"
   },
   "scripts": {
-      "check": "tsc --noEmit",
-      "build": "parcel build src/manifest.json --config @parcel/config-webextension",
-      "watch": "parcel watch src/manifest.json --config @parcel/config-webextension",
-      "ext": "web-ext run -s dist"
+    "check": "tsc --noEmit",
+    "build": "parcel build src/manifest.json --config @parcel/config-webextension",
+    "watch": "parcel watch src/manifest.json --config @parcel/config-webextension",
+    "ext": "web-ext run -s dist",
+    "test": "jest",
+    "prettier": "prettier --write src"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-typescript",
+      "@babel/preset-env"
+    ]
   }
 }
