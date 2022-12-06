@@ -163,7 +163,7 @@ async function loadVisiblePages(
 
   // Unload unneeded pages
   for (const pageIdx of pagesLoaded.keys()) {
-    if (!pagesToLoad.has(pageIdx) && pagesLoaded.get(pageIdx) === true) {
+    if (!pagesToLoad.has(pageIdx)) {
       pagesLoaded.delete(pageIdx);
       pages[pageIdx].replaceChildren();
     }
