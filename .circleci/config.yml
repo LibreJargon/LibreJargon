@@ -6,12 +6,22 @@ jobs:
       - image: cimg/base:2021.04
     steps:
       - checkout
+      - node/install
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Install all packages
+          command: npm install
+      - run:
+          name: Run Tests
+          command: npm run test  
       - run:
           name: Install dependencies and build project
-          command: echo "This is a test build job."
+          command: npm run build
       - sonarcloud/scan
 
 orbs:
+  node: circleci/node@5.0.2
   sonarcloud: sonarsource/sonarcloud@1.0.3
 
 workflows:
