@@ -7,9 +7,9 @@ const settings = [["Replace All Instances of Jargon", true]];
 function pullSettingsList() {
   if (self.user) {
     const uid = self.user.uid;
-    var counter = 0;
+    let counter = 0;
     self.dbHandler.getSettings(uid).then((settingsList) => {
-      for (var i of Object.keys(settingsList)) {
+      for (let i of Object.keys(settingsList)) {
         if (counter >= settings.length) {
           self.dbHandler.rmSettingFromList(self.user.uid, i);
         } else {

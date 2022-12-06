@@ -18,7 +18,6 @@ function signUpForAccount() {
 
   if (pwd !== copwd) {
     errormsg.style.visibility = "visible";
-    return;
   } else {
     window.authHandler.registerUser(eml, pwd).then((res) => {
       if (res === "error") {
