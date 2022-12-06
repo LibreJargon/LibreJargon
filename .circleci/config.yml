@@ -2,16 +2,21 @@ version: 2.1
 
 jobs:
   build:
-    docker:
-      - image: cimg/base:2021.04
+    executor: node/default
     steps:
       - checkout
+      - node/install-packages
+          pkg-manager: npm
       - run:
-          name: Install dependencies and build project
-          command: npm install && npm run build && npm run ext
+          command: npm run build && npm run ext
+          name: Run build
+      - test:
+          command: npm run test
+          name: Run tests
       - sonarcloud/scan
 
 orbs:
+  node: circleci/node@5.0.2
   sonarcloud: sonarsource/sonarcloud@1.0.3
 
 workflows:
