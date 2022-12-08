@@ -1,4 +1,5 @@
 # LibreJargon
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=LibreJargon_LibreJargon&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=LibreJargon_LibreJargon)
 ### An open-source jargon demystifier.
 The aim of this extension is to lower the barriers to entry for research by providing an easy to use interface that will make reading scientific papers easier by automatically defining jargon, providing accessibility/display options, and linking similar articles for further reading. That way, online misinformation (Climate Change, Covid, etc.) can be disproven more easily by the general public.
 
